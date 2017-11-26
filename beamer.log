@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/W32TeX) (preloaded format=xelatex 2016.10.4)  26 NOV 2017 14:35
+This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/W32TeX) (preloaded format=xelatex 2016.10.4)  26 NOV 2017 18:25
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -3391,6 +3391,8 @@ Overfull \vbox (0.74234pt too high) detected at line 193
 [15
 
 ]
+Requested font "ecrm1200" at 12.045pt
+ -> c:/texlive/2015/texmf-dist/fonts/tfm/jknappen/ec/ecrm1200.tfm
 File: logo/small-corner.pdf Graphic file (type QTm)
  <use  "logo/small-corner.pdf" >
 File: logo/zju_logo1.pdf Graphic file (type QTm)
@@ -3411,6 +3413,66 @@ File: logo/zju_logo1.pdf Graphic file (type QTm)
  <use  "logo/zju_logo1.pdf" > [18
 
 ]
+File: logo/small-corner.pdf Graphic file (type QTm)
+
+<use  "logo/small-corner.pdf" >
+File: logo/zju_logo1.pdf Graphic file (type QTm)
+ <use  "logo/zju_logo1.pdf" > [19
+
+]
+File: logo/small-corner.pdf Graphic file (type QTm)
+
+<use  "logo/small-corner.pdf" >
+File: logo/zju_logo1.pdf Graphic file (type QTm)
+ <use  "logo/zju_logo1.pdf" > [20
+
+] [21
+
+]
+File: logo/small-corner.pdf Graphic file (type QTm)
+
+<use  "logo/small-corner.pdf" >
+File: logo/zju_logo1.pdf Graphic file (type QTm)
+ <use  "logo/zju_logo1.pdf" > [22
+
+]
+File: logo/small-corner.pdf Graphic file (type QTm)
+
+<use  "logo/small-corner.pdf" >
+File: logo/zju_logo1.pdf Graphic file (type QTm)
+ <use  "logo/zju_logo1.pdf" > [23
+
+] [24
+
+]
+File: logo/small-corner.pdf Graphic file (type QTm)
+
+<use  "logo/small-corner.pdf" >
+File: logo/zju_logo1.pdf Graphic file (type QTm)
+ <use  "logo/zju_logo1.pdf" > [25
+
+]
+File: logo/small-corner.pdf Graphic file (type QTm)
+
+<use  "logo/small-corner.pdf" >
+File: logo/zju_logo1.pdf Graphic file (type QTm)
+ <use  "logo/zju_logo1.pdf" > [26
+
+]
+File: logo/small-corner.pdf Graphic file (type QTm)
+
+<use  "logo/small-corner.pdf" >
+File: logo/zju_logo1.pdf Graphic file (type QTm)
+ <use  "logo/zju_logo1.pdf" > [27
+
+]
+File: logo/small-corner.pdf Graphic file (type QTm)
+
+<use  "logo/small-corner.pdf" >
+File: logo/zju_logo1.pdf Graphic file (type QTm)
+ <use  "logo/zju_logo1.pdf" > [28
+
+]
 File: ./pic/zaoyin2.png Graphic file (type QTm)
 
 <use  "./pic/zaoyin2.png" >
@@ -3420,7 +3482,7 @@ File: logo/small-corner.pdf Graphic file (type QTm)
 
 <use  "logo/small-corner.pdf" >
 File: logo/zju_logo1.pdf Graphic file (type QTm)
- <use  "logo/zju_logo1.pdf" > [19
+ <use  "logo/zju_logo1.pdf" > [29
 
 ]
 File: ./pic/zaoyin3.png Graphic file (type QTm)
@@ -3432,14 +3494,14 @@ File: logo/small-corner.pdf Graphic file (type QTm)
 
 <use  "logo/small-corner.pdf" >
 File: logo/zju_logo1.pdf Graphic file (type QTm)
- <use  "logo/zju_logo1.pdf" > [20
+ <use  "logo/zju_logo1.pdf" > [30
 
 ]
 File: logo/small-corner.pdf Graphic file (type QTm)
 
 <use  "logo/small-corner.pdf" >
 File: logo/zju_logo1.pdf Graphic file (type QTm)
- <use  "logo/zju_logo1.pdf" > [21
+ <use  "logo/zju_logo1.pdf" > [31
 
 ]
 File: latex.png Graphic file (type QTm)
@@ -3485,35 +3547,33 @@ File: logo/small-corner.pdf Graphic file (type QTm)
  <use  "logo/small-corner.pdf" >
 File: logo/zju_logo1.pdf Graphic file (type QTm)
 
-<use  "logo/zju_logo1.pdf" > [22
+<use  "logo/zju_logo1.pdf" > [32
 
 ]
 File: logo/small-corner.pdf Graphic file (type QTm)
  <use  "logo/small-corner.pdf" >
 File: logo/zju_logo1.pdf Graphic file (type QTm)
 
-<use  "logo/zju_logo1.pdf" > [23
-
-]
-Requested font "ecrm1200" at 12.045pt
- -> c:/texlive/2015/texmf-dist/fonts/tfm/jknappen/ec/ecrm1200.tfm
-File: logo/small-corner.pdf Graphic file (type QTm)
- <use  "logo/small-corner.pdf" >
-File: logo/zju_logo1.pdf Graphic file (type QTm)
-
-<use  "logo/zju_logo1.pdf" > [24
+<use  "logo/zju_logo1.pdf" > [33
 
 ]
 File: logo/small-corner.pdf Graphic file (type QTm)
  <use  "logo/small-corner.pdf" >
 File: logo/zju_logo1.pdf Graphic file (type QTm)
 
-<use  "logo/zju_logo1.pdf" > [25
+<use  "logo/zju_logo1.pdf" > [34
+
+]
+File: logo/small-corner.pdf Graphic file (type QTm)
+ <use  "logo/small-corner.pdf" >
+File: logo/zju_logo1.pdf Graphic file (type QTm)
+
+<use  "logo/zju_logo1.pdf" > [35
 
 ]
 Requested font "ecrm1728" at 26.09749pt
  -> c:/texlive/2015/texmf-dist/fonts/tfm/jknappen/ec/ecrm1728.tfm
- [26
+ [36
 
 ]
 File: beamericonarticle.pdf Graphic file (type QTm)
@@ -3532,7 +3592,7 @@ File: logo/small-corner.pdf Graphic file (type QTm)
 
 <use  "logo/small-corner.pdf" >
 File: logo/zju_logo1.pdf Graphic file (type QTm)
- <use  "logo/zju_logo1.pdf" > [27
+ <use  "logo/zju_logo1.pdf" > [37
 
 ]
 No file beamer.bbl.
@@ -3545,24 +3605,24 @@ No file beamer.bbl.
 \tf@snm=\write8
 \openout8 = `beamer.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 344.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 344.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 477.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 477.
 (./beamer.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 344.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 344.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 477.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 477.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 344.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 477.
  ) 
 Here is how much of TeX's memory you used:
- 47114 strings out of 493706
- 972864 string characters out of 6148913
- 872814 words of memory out of 5000000
- 49726 multiletter control sequences out of 15000+600000
+ 47159 strings out of 493706
+ 974402 string characters out of 6148913
+ 873374 words of memory out of 5000000
+ 49771 multiletter control sequences out of 15000+600000
  26932 words of font info for 106 fonts, out of 8000000 for 9000
  1328 hyphenation exceptions out of 8191
  63i,16n,77p,10468b,712s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on beamer.pdf (27 pages).
+Output written on beamer.pdf (37 pages).
