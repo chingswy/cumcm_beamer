@@ -9,7 +9,7 @@
 % Neither the name of the nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 %
 % THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   
+  
 % Required files to compile:
 % 1. automation_logo.pdf
 % 2. beamerthemeJUB.sty
@@ -25,7 +25,6 @@
 \usetheme{JUB}
 %\usepackage{CJKutf8}
 \usepackage[UTF8]{ctex}  
-\usepackage{booktabs}
 %导入 ctex 宏包，添加中文支持
 %\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -91,166 +90,164 @@
     我们需要建立数学模型和算法，解决以下问题：
     \begin{enumerate}
     
-    \item 标定参数
+    \item 根据题目给出的标定模板，以及标定模板的接收信息，对CT系统的旋转中心的位置、探测器单元之间的距离以及射线的180个方向进行确定。
     
-    \item 重构图像
-    \item 精度与稳定性分析
-    \item 设计新模板
+    \item 根据给出的某未知介质的接收信息，利用(1)中得到的标定参数，对介质的位置、几何形状、吸收率进行确定。且给出指定位置的吸收率信息。
+    \item 根据给出的另一未知介质的接收信息，给出该未知介质的相关信息，以及指定未知的吸收率信息。
+    \item 对问题(1)中的参数进行精度和稳定性分析，并自行设计新模板，建立对应的标定模型，以改进参数标定。
     \end{enumerate}
   \end{frame} % 
 
   \section{问题一的求解}
   
-  \begin{frame}{求解思路}
-    \begin{enumerate}
-      \item 通过部分数据初步获得模型信息
-      \item 建立完整模型
-      \item 迭代求解拟合模型
-    \end{enumerate}
-    \doublepic{fujian1.png}{附件1几何形状}{fujian2.png}{附件2信息}
-  \end{frame}
-
   \begin{frame}{初步计算参数}
-    截取圆的部分，得到一组探测信息\(D(i)\)，对于探测点\(i\)，其发出的射线与圆心的距离为\(d_i = i\Delta d + d_0\)，其中\(\Delta d\)为探测器上的射线间距，\(d_0\)为探测器位置相对偏置。那么第\(i\)条射线与圆相交的弦长为\(2\sqrt{R^2 - d_i^2}\)，其中R为圆半径。我们推测探测器的接收数据与\(\rho l\)成一次函数关系，即
     \begin{equation}
       D(i)  = \mu\times 2\sqrt{R^2 - ( i\Delta d + d_0)^2}\rho  +c
-    \end{equation}
+      \end{equation}
       使用最小二乘法对曲线进行拟合，求出各个参数的值为：
       \[\mu =1.7724 , \Delta d = 0.2768, d_0 = -4.0688, c = 0.0000\]
   \end{frame}
- 
-  \begin{frame}{初步计算参数}
-    \maxpic{fitCir.png}{拟合圆上的数据}
+
+  \begin{frame}{模型建立}
+    以正方形托盘的中心为坐标原点，椭圆中心与圆中心的连线方向为\(x\)轴，过坐标原点垂直于\(x\)轴方向为\(y\)轴，建立平面直角坐标系。在这一坐标系中，设CT系统的旋转中心坐标为\(R(x_0,y_0)\)，探测器平面与\(x\)轴的夹角为\(\theta\)，探测器中心与旋转中心在探测器平面上的投影的距离为\(d_0\)。
   \end{frame}
 
-  \begin{frame}{完整模型建立}
-    以正方形托盘的中心为坐标原点，椭圆中心与圆中心的连线方向为\(x\)轴，过坐标原点垂直于\(x\)轴方向为\(y\)轴，建立平面直角坐标系。在这一坐标系中，设CT系统的旋转中心坐标为\(R(x_0,y_0)\)，探测器平面与\(x\)轴的夹角为\(\theta\)，探测器中心与旋转中心在探测器平面上的投影的距离为\(d_0\)。
-    
-  \end{frame}
-  
-  \begin{frame}{参数定义}
-    \begin{figure}
-      \begin{center}
-        \includegraphics[scale=0.3]{pic/q13.png}
-      \end{center}
-      \caption{参数定义}
-      \label{Fig:xian}
-    \end{figure}
+  \begin{frame}
+    \doublepic{q10.png}{标准形态}{q14.png}{圆的弦长}
+    这张图没有说明参数的具体位置，可以改改
   \end{frame}
 
   \begin{frame}{求解长度}
     标定模板中，椭圆与圆的方程分别为：
     \[\frac{x^2}{m^2} + \frac{y^2}{n^2} = 1,m = 15,n = 40;(x - 45)^2 + y^2 = 4^2\]
-    综合求解，所以对于探测角度为\(\phi\)的探测器，其上第\(i\)条X射线探测所得的数值的计算公式为：
-    \begin{tiny}
-      \begin{align*}\label{va}
-      V = & \mu\frac{2mn\sqrt{\max(0,m^2\cos^2\phi + n^2\sin^2\phi - (x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d)^2})}{ m^2\cos^2\phi + n^2\sin^2\phi} \\
-        & + 2\mu\sqrt{\max(0,r_0^2 - (G\cos\phi - (x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d))^2)}
-      \end{align*}
-    \end{tiny}
+    为了对问题进行化简，我们设定一个坐标原点在探测器上的投影位于探测器中心的状态，此时对于探测器上与探测器中心相距为\(d\)的一条射线，可以对其在椭圆中交出的弦长进行求解。这条射线的方程可写出为：
+    \[x\cos\phi + y\sin\phi = d\]
+    与椭圆的方程进行联立求解，可解出该直线与椭圆相交的弦长：
+    \[ p = \frac{2mn\sqrt{r^2 - d^2}}{r^2},\text{这里} r^2 = m^2\cos^2\phi + n^2\sin^2\phi\]
+  \end{frame}
+
+  \begin{frame}
+    对于圆上的部分，设圆心坐标为\((G,0)\)，圆半径为\(r_0\)，其中\(G = 45,r_0 = 4\)，那么容易求出其弦长表达式为：
+    \[p_1 = 2\sqrt{r_0^2 - (G\cos\phi - d)^2}\]
+    同时，由于在整个旋转过程中，直线与椭圆或圆不一定有交点，那么这种情况下，我们对整个角度范围进行整合，可以得到总的投影长度为：
+    \[p_t =  \frac{2mn\sqrt{\max(0,m^2\cos^2\phi + n^2\sin^2\phi - d^2})}{ m^2\cos^2\phi + n^2\sin^2\phi} +\]
+    \[2\sqrt{\max(0,r_0^2 - (G\cos\phi - d)^2)}\]
+    考虑到实际情况中，探测器的中心与坐标原点有一定的偏移，那么在上式的基础上，我们需要对投影长度进行修正。
+  \end{frame}
+
+  \begin{frame}{弦长修正}
+    综合上述各式，所以对于探测角度为\(\phi\)的探测器，其上第\(i\)条X射线探测所得的数值的计算公式为：
+    \begin{align*}\label{val}
+    V = & \mu\frac{2mn\sqrt{\max(0,m^2\cos^2\phi + n^2\sin^2\phi - (x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d)^2})}{ m^2\cos^2\phi + n^2\sin^2\phi} \\
+      & + 2\mu\sqrt{\max(0,r_0^2 - (G\cos\phi - (x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d))^2)}
+    \end{align*}
   \end{frame}
 
   \begin{frame}{模型求解}
     \begin{itemize}
-      \item 选取参数\(d_0,x_0,y_0,\mu,\Delta d,\phi_i,i=1,\ldots,180\)的初值，这里参数的初值可以随意选取，我们设置为\(d_0 = x_0 = y_0 =  0,\mu = 1.7724\)（由前文初步计算得），使用\(512\times 180\)组数据，对所有参数进行拟合，获得第一次求解的参数结果。
-      \item 对第一次求解得到的\(\phi_{1_i},i=1,\ldots,180\)，对数据进行平滑处理，接着将\(\phi_i\)作为已知参数，使用\(512\times 180\)组数据，以第一次求解的结果作为初值，对参数\(d_0,x_0,y_0,\mu,\Delta d\)进行求解，得到第二次参数的求解结果。
+      \item 选取参数\(d_0,x_0,y_0,\mu,\Delta d,\phi_i,i=1,\ldots,180\)的初值，这里参数的初值可以随意选取，我们设置为\(d_0 = x_0 = y_0 =  0,\mu = 1.7724\)（由前文粗计算得），使用\(512\times 180\)组数据，对所有参数进行拟合，获得第一次求解的参数结果。
+      \item 对第一次求解得到的\(\phi_{1_i},i=1,\ldots,180\)，使用局部加权回归散点平滑法进行平滑处理，接着将\(\phi_i\)作为已知参数，使用\(512\times 180\)组数据，以第一次求解的结果作为初始点，对参数\(d_0,x_0,y_0,\mu,\Delta d\)进行求解，得到第二次参数的求解结果。
     \end{itemize}
     \end{frame}
-    % 局部加权回归散点平滑法是什么
-    % 为什么要平滑
 
     \begin{frame}
     \begin{itemize}
       \item 使用第二次求解得到的参数\(d_0,x_0,y_0,\mu,\Delta d\)作为已知参数，对于180组，每组512个数据，以第(2)步中得到的角度作为初值，分别对每组数据的角度参数进行求解，得到第(3)步的求解结果。
       \item 使用第(2)步与第(3)步的结果作为初始值，再次使用\(512\times 180\)组数据，对所有参数进行拟合，得到最终结果。
       \end{itemize}
-      经测试，经过这样几次求解之后，所得值已经稳定，再次求解结果不会有明显改变。
-      % 得说明一下继续迭代结果保持稳定
-      % 妈的这里好像没法跨页写enumerate
+      ￥得说明一下继续迭代结果保持稳定
+      ￥妈的这里好像没法跨页写enumerate
   \end{frame}
 
   \begin{frame}{求解结果} 
     使用上述算法对模型进行求解，得到各个参数如下：
     \[\mu = 1.7727,x_0 = -9.2696,y_0 = 6.2738\]
     \[d_0 = 0.0000,\Delta d = 0.2768\]
-    根据所建坐标系 ，CT系统X射线逆时针旋转的始值为-60.3465$^\circ$，终值 118.6439$^\circ$。
   \end{frame}
   
-  \section{问题二的求解}
-  \begin{frame}{数据预处理}
-    由问题一可知，由于安装过程的误差，CT系统的旋转中心并不在正方形的中心，由前文推导公式可知，探测器上的第\(i\)个传感器与坐标原点的沿探测器方向的距离为：
-    \[d' = x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d\]
-    对于任意角度的探测器，我们都可以设置一个中心与原点重合的辅助探测器，将探测器上的数据转化到辅助探测器上，再对问题进行求解。
-    即：
-    \[d' = (i' - 256.5)\Delta d = x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d\]
-  \end{frame}
+\section{问题二的求解}
 
-  \begin{frame}{数据预处理}
-    则对于原始数据\( y = data(i,j)\)，可以得到新的转化后的数据
-    \[data_{pre}(i',j) = data(i(i'),j)\]
-    \[ = data(i' - (x_0\cos\phi + y_0\sin\phi + d_0)/\Delta d,j)\]
-    \midpic{datapre3.png}{数据预处理}
-  \end{frame}
+\begin{frame}{连续模型}
+	\begin{theorem}{Fourier Slice Theorem}
+		\begin{equation}
+		\mathcal{F}\{f(x,y)\}(\omega cos\theta,\omega sin\theta)=\mathcal{F}\{P_\theta(t)\}(\omega)
+		\end{equation}
+	\end{theorem}
+	傅里叶中心切片定理将投影与图像两者在频域建立了联系。
+	实际情况均为离散化数据，可使用FFT等进行计算；本文使用滤波反投影法 (FBP) 进行重建。
+\end{frame}
 
-  \section{问题三的求解}
+\begin{frame}{FBP}
+	算法步骤如下：
+	\begin{enumerate}
+		\item 指定$\theta$，对\(P_\theta (t)\)应用FFT，得到\(S_\theta (w)\)
+		\item 对\(S_\theta (w)\)做滤波，本文使用Ramp函数
+		\item 应用IFFT于滤波后的结果，得滤波后的投影矩阵
+		\item 对投影矩阵插值，进行反投影，本文使用nearest方式
+		\item 遍历所有的$\theta$
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{离散模型}
+	设图片共有\(J = n\times n\)个像素，记$\textbf{x}=[x_{1},x_{2} ,\ldots ,x_{J}]^T$为J维图像矢量，\(x_j\)表示图像上第\(j\)个像素点的吸收强度；$\textbf{p}=[p_{1},p_{2} \ldots p_{I}]^T$为I维投影矢量，$p_i$表示第\(i\)条射线所经过的所有像素的投影值，$R=(r_ij)_{I\times J}$为投影矩阵，\(r_ij\)为0-1变量表示宽为\(\delta\)的粗射线\(i\)是否穿过像素\(j\)，则
+	\begin{equation}
+		R\textbf{x}=\textbf{p}
+	\end{equation}
+\end{frame}
+
+\begin{frame}{ART}
+	ART（代数迭代法）的思路是每次校正一条射线路径上的像素值，使得该条真伪射线和间误差减小。迭代公式为：ART（代数迭代法）的思路是每次校正一条射线路径上的像素值，使得该条真伪射线和间误差减小。迭代公式为：
+	\begin{equation}
+		x^{(k+1)}=x^{(k)}+\lambda^{(k)}\frac{q_{i_{k}}-r_{i_{k}}x^{(k)}}{||r_{i_{k}}||^{2}}r_{i_{k}}
+	\end{equation}
+	式中，k是迭代次数，$k=0,1 \ldots$，$i_{k}=k(modI)+1$；$\lambda^{(k)}$称为松弛参数，本文取$\lambda^{(k)}=0.25$
+	\begin{alertblock}{Note}
+		迭代过程中每步还可应用像素值非负这一限制
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}{降噪算法}
+	本文使用NLM（非局部均值）降噪方式对图像进行处理。 NLM算法是图像降噪领域非常有效的算法之一，效率较高，实现简单。其思路是对像素的某邻域窗口内的像素灰度值做加权平均，且像素越相似，权重越大。
+	\begin{equation}
+		NLM(x_{i})=\sum_{j\in N_{i}} w(i,j)x_{j}
+	\end{equation}
+	其中,\(w(i,j)=\frac{e^{-||x_{V_{i}}-x_{V_{j}}||^2/h^2}}{\sum_{j\in N_{i}}e^{-||x_{V_{i}}-x_{V_{j}}||^2/h^2}}\)，$N_{i}$表示像素i的邻域，本文取5*5像素窗口，$x_{V_{i}}$是像素i邻域像素的值构成的矩阵，这里矩阵模的意义是各元素平方和的平方根$h$控制滤波强度，本文取为0.5
+\end{frame}
+
+\begin{frame}
+  重建之前，先将数据进行预处理，变换到旋转中心与原点重合且关于过原点的垂线对称的参考探测器上\\
+  我是图片！\\
+  算法输出结果再做适当的缩放和比例处理即为最终结果。
+\end{frame}
+
+\section{问题三的求解}
+
+\begin{frame}{去噪预处理}
+  观察数据，发现含有较多噪声：
+  \begin{itemize}
+    \item 一方面，作差分图可见主要数据集中在探测器中间部位，边缘部分值远小于主要数据值
+    \item 另一方面，绘制对数坐标图可见边缘数值无规律波动
+  \end{itemize}
+  同时，根据对数坐标图，考虑噪声水平约为0.3，筛选小于0.3的值进行进一步检验。画出分布直方图，猜想其近似服从均为分布；利用SPSS做Kolmogorov-Smirnov均匀分布检验。
+\end{frame}
+
+\begin{frame}{去噪预处理}
+  我是图片！\\
+  检验结果接受原假设（均匀分布），均值为0.1549，显著性水平0.157\\
+  因此，对原数据做去噪处理，本文将非主信号区域的噪声删去并在主要信号值上减去噪声均值。之后再按照问题二所述方法进行预处理，并分别使用ART算法与FBP算法进行重建。
+\end{frame}
+
+\begin{frame}
+  我是图片！
+\end{frame}
+
+\begin{frame}{评价及后续改进}
+  对比两种算法，ART-NLM算法的重建速度较慢，成像质量略差与FBP。我们认为这是由于投影矩阵$R$元素为0-1变量造成的；每次做迭代修正时，射线边缘的像素也同时受到等值的修正，造成了一定的偏差\\
+  之后，我们重写了算法，定义\(r_ij\)为射线$i$与像素$j$交得的线段长度，ART-NLM重建结果与标准值十分接近，表现出极佳的精度。
+\end{frame}
+
   \section{问题四的求解}
-  \begin{frame}{精度分析}
-    在这个问题中，我们采用模拟仿真的方法进行精度分析。在问题一模型的基础上，我们通过更改位置参数信息，进行模拟，得到这种情况下的\(512\times180\)个数据，再使用我们的模型，在这组数据的基础上进行标定，计算得出标定所需参数，与设定的理论值进行对比，即可得到模型的精度信息。
-  \end{frame}
-
-  \begin{frame}{精度分析}
-    设置参数\(d_0 = 1,\mu = 1.5,x_0 = 10,y_0 = 10\)，观测角度依次为\(\phi_i = i^\circ,i = 1,\ldots,180\)，使用问题一中模型，模拟生成180组探测器数据。将生成的探测器数据进行参数标定，得到结果如表\ref{jingdu}所示。 
-    \begin{table}[H]
-    \centering
-    \caption{计算机仿真实验的几何标定结果}
-    \label{jingdu}
-    \begin{tabular}{ccccc}
-    \toprule 
-    \text{参数名称} & \(d_0(mm)\) & \(x_0(mm)\) & \(y_0(mm)\) & \(\mu\)\\
-    \midrule 
-    \text{理论值} & 5 & -8 & 10 & 1.5 \\
-    \text{计算值} & 5.0000 & -8.0000 & 10.0000 & 1.5000 \\
-    \text{差值}(\(\times10^{-10}\)) & -0.1195 & -0.0022 & -0.5961& -0.0135\\
-    \bottomrule
-    \end{tabular}
-    \end{table}
-  \end{frame}
-
-  \begin{frame}{稳定性分析}
-    使用计算机进行仿真，人为地在投影坐标中增加不同等级的噪声数据，再以此进行模板标定。
-    与精度分析相同，设置参数\(d_0 = 1,\mu = 1.5,x_0 = 10,y_0 = 10\)，观测角度依次为\(\phi_i = i^\circ,i = 1,\ldots,180\)，使用(1)中模型，模拟生成180组探测器数据。根据这种方法模拟得到的探测器接受信息中的数据范围在(0,120)之间，我们给原数据增加在(-15,15)范围内均匀分布的随机噪声。从数据图中可以看出，数据信息较原数据更模糊，且噪声较多。
-
-    这里有一个问题就是实际的探测器数值是不会有负值的，我们在做的时候没有考虑到这一点，导致生成的探测器数据会有负值。
-  \end{frame}
-
-  \begin{frame}{稳定性分析}
-    \doublepic{zaoyin2.png}{投影数据}{zaoyin30_wucha.png}{角度计算误差}
-    角度计算的均方根误差为0.0053rad，结合图像与表格数据，我们可以看出，我们的标定算法在数据有小范围的噪音的时候，标定产生的误差仍然较小，算法具有很好的稳定性。
-  \end{frame}
-
-  \begin{frame}{稳定性分析}
-    \doublepic{zaoyin3.png}{(-50,50)噪声的投影数据}{zaoyin50_wucha.png}{角度计算误差}
-  \end{frame}
-
-  \begin{frame}{稳定性分析}
-    \begin{table}[H]
-      \centering
-      \caption{(-50,50)均匀分布的噪声误差}
-      \label{50zao}
-      \begin{tabular}{ccccc}
-      \toprule 
-      \text{参数名称} & \(d_0(mm)\) & \(x_0(mm)\) & \(y_0(mm)\) & \(\mu\)\\
-      \midrule 
-      \text{理论值} & 5 & -8 & 10 & 1.5 \\
-      \text{计算值} & 5.0693 & -8.0188 & 10.3614 & 1.4938 \\
-      \text{差值} & -0.0693 & 0.0188 & -0.3614 & 0.0062\\
-      \bottomrule
-      \end{tabular}
-      \end{table}
-      角度计算的均方根误差为0.0191rad，相比噪声较小时，参数标定的误差有所增大，但仍然在很小的范围内。
-  \end{frame}
-
-  
+  %\label{Sec:introduction}
   \begin{frame}{1. Introduction 引言}
     \framesubtitle{frame subtitle 页面副标题}
     This nuaa-JUB.tex is a \LaTeX \ Beamer template using the JUB Beamer theme  produced by Billy Okal.
