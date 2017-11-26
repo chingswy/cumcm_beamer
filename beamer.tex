@@ -9,7 +9,7 @@
 % Neither the name of the nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 %
 % THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  
+   
 % Required files to compile:
 % 1. automation_logo.pdf
 % 2. beamerthemeJUB.sty
@@ -177,9 +177,80 @@
   \end{frame}
   
   \section{问题二的求解}
+  \begin{frame}{数据预处理}
+    由问题一可知，由于安装过程的误差，CT系统的旋转中心并不在正方形的中心，由前文推导公式可知，探测器上的第\(i\)个传感器与坐标原点的沿探测器方向的距离为：
+    \[d' = x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d\]
+    对于任意角度的探测器，我们都可以设置一个中心与原点重合的辅助探测器，将探测器上的数据转化到辅助探测器上，再对问题进行求解。
+    即：
+    \[d' = (i' - 256.5)\Delta d = x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d\]
+  \end{frame}
+
+  \begin{frame}{数据预处理}
+    则对于原始数据\( y = data(i,j)\)，可以得到新的转化后的数据
+    \[data_{pre}(i',j) = data(i(i'),j)\]
+    \[ = data(i' - (x_0\cos\phi + y_0\sin\phi + d_0)/\Delta d,j)\]
+    \midpic{datapre3.png}{数据预处理}
+  \end{frame}
+
   \section{问题三的求解}
   \section{问题四的求解}
-  %\label{Sec:introduction}
+  \begin{frame}{精度分析}
+    在这个问题中，我们采用模拟仿真的方法进行精度分析。在问题一模型的基础上，我们通过更改位置参数信息，进行模拟，得到这种情况下的\(512\times180\)个数据，再使用我们的模型，在这组数据的基础上进行标定，计算得出标定所需参数，与设定的理论值进行对比，即可得到模型的精度信息。
+  \end{frame}
+
+  \begin{frame}{精度分析}
+    设置参数\(d_0 = 1,\mu = 1.5,x_0 = 10,y_0 = 10\)，观测角度依次为\(\phi_i = i^\circ,i = 1,\ldots,180\)，使用问题一中模型，模拟生成180组探测器数据。将生成的探测器数据进行参数标定，得到结果如表\ref{jingdu}所示。 
+    \begin{table}[H]
+    \centering
+    \caption{计算机仿真实验的几何标定结果}
+    \label{jingdu}
+    \begin{tabular}{ccccc}
+    \toprule 
+    \text{参数名称} & \(d_0(mm)\) & \(x_0(mm)\) & \(y_0(mm)\) & \(\mu\)\\
+    \midrule 
+    \text{理论值} & 5 & -8 & 10 & 1.5 \\
+    \text{计算值} & 5.0000 & -8.0000 & 10.0000 & 1.5000 \\
+    \text{差值}(\(\times10^{-10}\)) & -0.1195 & -0.0022 & -0.5961& -0.0135\\
+    \bottomrule
+    \end{tabular}
+    \end{table}
+  \end{frame}
+
+  \begin{frame}{稳定性分析}
+    使用计算机进行仿真，人为地在投影坐标中增加不同等级的噪声数据，再以此进行模板标定。
+    与精度分析相同，设置参数\(d_0 = 1,\mu = 1.5,x_0 = 10,y_0 = 10\)，观测角度依次为\(\phi_i = i^\circ,i = 1,\ldots,180\)，使用(1)中模型，模拟生成180组探测器数据。根据这种方法模拟得到的探测器接受信息中的数据范围在(0,120)之间，我们给原数据增加在(-15,15)范围内均匀分布的随机噪声。从数据图中可以看出，数据信息较原数据更模糊，且噪声较多。
+
+    这里有一个问题就是实际的探测器数值是不会有负值的，我们在做的时候没有考虑到这一点，导致生成的探测器数据会有负值。
+  \end{frame}
+
+  \begin{frame}{稳定性分析}
+    \doublepic{zaoyin2.png}{投影数据}{zaoyin30_wucha.png}{角度计算误差}
+    角度计算的均方根误差为0.0053rad，结合图像与表格数据，我们可以看出，我们的标定算法在数据有小范围的噪音的时候，标定产生的误差仍然较小，算法具有很好的稳定性。
+  \end{frame}
+
+  \begin{frame}{稳定性分析}
+    \doublepic{zaoyin3.png}{(-50,50)噪声的投影数据}{zaoyin50_wucha.png}{角度计算误差}
+  \end{frame}
+
+  \begin{frame}{稳定性分析}
+    \begin{table}[H]
+      \centering
+      \caption{(-50,50)均匀分布的噪声误差}
+      \label{50zao}
+      \begin{tabular}{ccccc}
+      \toprule 
+      \text{参数名称} & \(d_0(mm)\) & \(x_0(mm)\) & \(y_0(mm)\) & \(\mu\)\\
+      \midrule 
+      \text{理论值} & 5 & -8 & 10 & 1.5 \\
+      \text{计算值} & 5.0693 & -8.0188 & 10.3614 & 1.4938 \\
+      \text{差值} & -0.0693 & 0.0188 & -0.3614 & 0.0062\\
+      \bottomrule
+      \end{tabular}
+      \end{table}
+      角度计算的均方根误差为0.0191rad，相比噪声较小时，参数标定的误差有所增大，但仍然在很小的范围内。
+  \end{frame}
+
+  
   \begin{frame}{1. Introduction 引言}
     \framesubtitle{frame subtitle 页面副标题}
     This nuaa-JUB.tex is a \LaTeX \ Beamer template using the JUB Beamer theme  produced by Billy Okal.
