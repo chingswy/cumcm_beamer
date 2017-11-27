@@ -2,8 +2,7 @@
 \beamer@sectionintoc {1}{问题重述}{3}{0}{1}
 \beamer@sectionintoc {2}{问题一的求解}{5}{0}{2}
 \beamer@sectionintoc {3}{问题二的求解}{14}{0}{3}
-\beamer@sectionintoc {4}{问题三的求解}{22}{0}{4}
-\beamer@sectionintoc {5}{问题四的求解}{26}{0}{5}
-\beamer@sectionintoc {6}{Mathematical model}{33}{0}{6}
-\beamer@sectionintoc {7}{Empirical experiments}{34}{0}{7}
-\beamer@sectionintoc {8}{参考文献}{37}{0}{8}
+\beamer@sectionintoc {4}{问题三的求解}{23}{0}{4}
+\beamer@sectionintoc {5}{问题四的求解}{28}{0}{5}
+\beamer@sectionintoc {6}{心得与体会}{39}{0}{6}
+\beamer@sectionintoc {7}{参考文献}{45}{0}{7}

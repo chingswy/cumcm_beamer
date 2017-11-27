@@ -21,8 +21,8 @@
 
 % \documentclass[handout]{beamer}
 \documentclass{beamer} 
-
 \usetheme{JUB}
+\def\mathfamilydefault{\rmdefault} 
 %\usepackage{CJKutf8}
 \usepackage[UTF8]{ctex}  
 \usepackage{booktabs}
@@ -30,7 +30,7 @@
 %\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[scaled]{helvet}
-\usepackage{libertine}
+\usepackage{libertine}  
 
 %简单的插入三种大小的图片的命令
 \newcommand{\maxpic}[2]{  \begin{figure}[H]
@@ -84,20 +84,29 @@
 
 \section{问题重述}
 \begin{frame}{问题背景}
-	CT系统是一种利用样品对射线的能量吸收特性对样品进行断层成像的技术，在不破坏样品的情况下获取样品内部的结构信息。问题中使用的是一种二维CT系统，探测器平面发出平行入射的X射线，探测器绕某固定的旋转中心逆时针旋转180次，可以获得180组接收信息，每组信息有512个等距单元的数据。
+	\small CT系统是一种利用样品对射线的能量吸收特性对样品进行断层成像的技术，在不破坏样品的情况下获取样品内部的结构信息。问题中使用的是一种二维CT系统，探测器平面发出平行入射的X射线，探测器绕某固定的旋转中心逆时针旋转180次，可以获得180组接收信息，每组信息有512个等距单元的数据。
+	\midpic{Overall_Sketch.png}{整体示意图}
 \end{frame} % 
+
 
 \begin{frame}{解决的问题}
 	我们需要建立数学模型和算法，解决以下问题：
-	\begin{enumerate}
-		  
+	\begin{enumerate}		  
 		\item 标定参数
-		        
+			\begin{enumerate}
+				\item[-] 旋转中心
+				\item[-] 旋转角度
+			\end{enumerate}
 		\item 重构图像
+			\begin{enumerate}
+				\item[-] 根据投影数据反求原图像
+			\end{enumerate}
 		\item 精度与稳定性分析
 		\item 设计新模板
 	\end{enumerate}
 \end{frame} % 
+
+
 
 \section{问题一的求解}
 
@@ -111,22 +120,42 @@
 \end{frame}
 
 \begin{frame}{初步计算参数}
-	截取圆的部分，得到一组探测信息\(D(i)\)，对于探测点\(i\)，其发出的射线与圆心的距离为\(d_i = i\Delta d + d_0\)，其中\(\Delta d\)为探测器上的射线间距，\(d_0\)为探测器位置相对偏置。那么第\(i\)条射线与圆相交的弦长为\(2\sqrt{R^2 - d_i^2}\)，其中R为圆半径。我们推测探测器的接收数据与\(\rho l\)成一次函数关系，即
+	\small 截取圆的部分，得到一组探测信息\(D(i)\)，对于探测点\(i\)，其发出的射线与圆心的距离为\(d_i = i\Delta d + d_0\)，其中\(\Delta d\)为探测器上的射线间距，\(d_0\)为探测器位置相对偏置。那么第\(i\)条射线与圆相交的弦长为\(2\sqrt{R^2 - d_i^2}\)，其中R为圆半径。我们推测探测器的接收数据与\(\rho l\)成一次函数关系，即
 	\begin{equation}
 		D(i)  = \mu\times 2\sqrt{R^2 - ( i\Delta d + d_0)^2}\rho  +c
 	\end{equation}
-	使用最小二乘法对曲线进行拟合，求出各个参数的值为：
-	\[\mu =1.7724 , \Delta d = 0.2768, d_0 = -4.0688, c = 0.0000\]
+	\begin{figure}[H]
+		\begin{minipage}[H]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./pic/q10.png}
+		\end{minipage}
+		\begin{minipage}[H]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./pic/fujian2.png}
+		\end{minipage}
+	\end{figure}
+
 \end{frame}
 
 \begin{frame}{初步计算参数}
-	\maxpic{fitCir.png}{拟合圆上的数据}
+	\small 使用最小二乘法对曲线进行拟合，求出各个参数的值为：
+	\[\mu =1.7724 , \Delta d = 0.2768, d_0 = -4.0688, c = 0.0000\]
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{./pic/fitCir.png}\\
+		\caption{拟合圆上的数据}
+	  \end{figure}
+
 \end{frame}
+
+
 
 \begin{frame}{完整模型建立}
 	以正方形托盘的中心为坐标原点，椭圆中心与圆中心的连线方向为\(x\)轴，过坐标原点垂直于\(x\)轴方向为\(y\)轴，建立平面直角坐标系。在这一坐标系中，设CT系统的旋转中心坐标为\(R(x_0,y_0)\)，探测器平面与\(x\)轴的夹角为\(\theta\)，探测器中心与旋转中心在探测器平面上的投影的距离为\(d_0\)。
 	  
 \end{frame}
+
+
 
 \begin{frame}{参数定义}
 	\begin{figure}
@@ -137,6 +166,8 @@
 		\label{Fig:xian}
 	\end{figure}
 \end{frame}
+
+
 
 \begin{frame}{求解长度}
 	标定模板中，椭圆与圆的方程分别为：
@@ -150,7 +181,10 @@
 	\end{tiny}
 \end{frame}
 
+
+
 \begin{frame}{模型求解}
+	\textbf{迭代优化算法}
 	\begin{itemize}
 		\item 选取参数\(d_0,x_0,y_0,\mu,\Delta d,\phi_i,i=1,\ldots,180\)的初值，这里参数的初值可以随意选取，我们设置为\(d_0 = x_0 = y_0 =  0,\mu = 1.7724\)（由前文初步计算得），使用\(512\times 180\)组数据，对所有参数进行拟合，获得第一次求解的参数结果。
 		\item 对第一次求解得到的\(\phi_{1_i},i=1,\ldots,180\)，对数据进行平滑处理，接着将\(\phi_i\)作为已知参数，使用\(512\times 180\)组数据，以第一次求解的结果作为初值，对参数\(d_0,x_0,y_0,\mu,\Delta d\)进行求解，得到第二次参数的求解结果。
@@ -159,7 +193,9 @@
 % 局部加权回归散点平滑法是什么
 % 为什么要平滑
 
-\begin{frame}
+
+\begin{frame}{模型求解}
+	\textbf{迭代优化算法}
 	\begin{itemize}
 		\item 使用第二次求解得到的参数\(d_0,x_0,y_0,\mu,\Delta d\)作为已知参数，对于180组，每组512个数据，以第(2)步中得到的角度作为初值，分别对每组数据的角度参数进行求解，得到第(3)步的求解结果。
 		\item 使用第(2)步与第(3)步的结果作为初始值，再次使用\(512\times 180\)组数据，对所有参数进行拟合，得到最终结果。
@@ -169,14 +205,36 @@
 	% 妈的这里好像没法跨页写enumerate
 \end{frame}
 
+
+
+
 \begin{frame}{求解结果} 
-	使用上述算法对模型进行求解，得到各个参数如下：
+	\small 使用上述算法对模型进行求解，得到各个参数如下：
 	\[\mu = 1.7727,x_0 = -9.2696,y_0 = 6.2738\]
 	\[d_0 = 0.0000,\Delta d = 0.2768\]
-	根据所建坐标系 ，CT系统X射线逆时针旋转的始值为-60.3465$^\circ$，终值 118.6439$^\circ$。
+	\small 根据所建坐标系 ，CT系统X射线逆时针旋转的始值为-60.3465$^\circ$，终值 118.6439$^\circ$。
+	\midpic{q12.png}{标定板示意图}
 \end{frame}
 
+
+
+
 \section{问题二的求解}
+
+\begin{frame}{求解思路}
+	\begin{enumerate}
+		\item 预备知识：拉东定理（Radon Theorem)
+		\item 连续模型——滤波反投影算法（FBP）
+		\item 离散模型——代数迭代法（ART）
+	\end{enumerate}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\textwidth]{./pic/pro3.png}\\
+		\end{figure}
+\end{frame}
+
+
+
 \begin{frame}{数据预处理}
 	由问题一可知，由于安装过程的误差，CT系统的旋转中心并不在正方形的中心，由前文推导公式可知，探测器上的第\(i\)个传感器与坐标原点的沿探测器方向的距离为：
 	\[d' = x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d\]
@@ -185,6 +243,8 @@
 	\[d' = (i' - 256.5)\Delta d = x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d\]
 \end{frame}
 
+
+
 \begin{frame}{数据预处理}
 	则对于原始数据\( y = data(i,j)\)，可以得到新的转化后的数据
 	\[data_{pre}(i',j) = data(i(i'),j)\]
@@ -192,37 +252,40 @@
 	\midpic{datapre3.png}{数据预处理}
 \end{frame}
 
+
+
 \begin{frame}{连续模型}
-	\begin{theorem}{Fourier Slice Theorem}
-		  
-		\begin{equation}
-			\mathcal{F}\{f(x,y)\}(\omega cos\theta,\omega sin\theta)=\mathcal{F}\{P_\theta(t)\}(\omega)
-		\end{equation}
+	\begin{theorem}	
+		Line Intergal of the Picture
+		\[ P_\theta (t) = \int_{(\theta, t) line}f(x, y)\ ds \]
+		FT of $P_\theta (t)$
+		\[S_\theta (w) = \int_{-\infty}^{\infty}P_\theta (t) e^{-j2\pi wt}dt \]
+		Fourier Slice Theorem  
+		\[\mathcal{F}\{f(x,y)\}(\omega cos\theta,\omega sin\theta)=\mathcal{F}\{P_\theta(t)\}(\omega)\]
 	\end{theorem}
 	  
-	傅里叶中心切片定理将投影与图像两者在频域建立了联系。
-	  
-	实际情况均为离散化数据，可使用FFT等进行计算；本文使用滤波反投影法 (FBP) 进行重建。
+	\footnotesize 傅里叶中心切片定理将\textbf{投影}与\textbf{图像}两者在频域建立了联系。实际情况均为离散化数据，可使用FFT等进行计算；使用滤波反投影法 (FBP) 进行重建。
 	  
 \end{frame}
   
   
   
-\begin{frame}{FBP} 
+\begin{frame}{连续模型：FBP} 
 	算法步骤如下：  
 	\begin{enumerate}
 		\item 指定$\theta$，对\(P_\theta (t)\)应用FFT，得到\(S_\theta (w)\)
 		        
 		\item 对\(S_\theta (w)\)做滤波，本文使用Ramp函数
 		        
-		\item 应用IFFT于滤波后的结果，得滤波后的投影矩阵
+		\item 应用iFFT于滤波后的结果，得滤波后的投影矩阵
 		        
 		\item 对投影矩阵插值，进行反投影，本文使用nearest方式
 		        
 		\item 遍历所有的$\theta$    
 	\end{enumerate}
 \end{frame}
-  
+% Ramp滤波是怎么回事？
+% 插值又是个啥，我咋不记得
   
   
 \begin{frame}{离散模型}  
@@ -234,7 +297,7 @@
   
   
   
-\begin{frame}{ART}
+\begin{frame}{离散模型：ART}
 	  
 	ART（代数迭代法）的思路是每次校正一条射线路径上的像素值，使得该条真伪射线和间误差减小。迭代公式为：ART（代数迭代法）的思路是每次校正一条射线路径上的像素值，使得该条真伪射线和间误差减小。迭代公式为：
 	  
@@ -265,11 +328,14 @@
   
   
   
-\begin{frame}
+\begin{frame}{求解结果}
 	  
-	重建之前，先将数据进行预处理，变换到旋转中心与原点重合且关于过原点的垂线对称的参考探测器上\\
+	\small 重建之前，先将数据进行预处理，变换到旋转中心与原点重合且关于过原点的垂线对称的参考探测器上\\
 	  
-	我是图片！\\
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\textwidth]{./pic/DOT.jpg}\\
+	\end{figure}
 	  
 	算法输出结果再做适当的缩放和比例处理即为最终结果。
 	  
@@ -279,42 +345,60 @@
   
 \section{问题三的求解}
   
-  
+\begin{frame}{求解思路}
+   \begin{figure}[H]
+		\begin{minipage}[H]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./pic/fujian5_2.png}
+		\end{minipage}
+		\begin{minipage}[H]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./pic/fujian5.png}
+		\end{minipage}
+	\end{figure}
+	与第二问区别：增加噪声。数据更复杂，考验算法鲁棒性。
+\end{frame}
   
 \begin{frame}{去噪预处理}
-	  
-	观察数据，发现含有较多噪声：
+	\small 观察数据，发现含有较多噪声：
 	  
 	\begin{itemize}
 		  
-		\item 一方面，作差分图可见主要数据集中在探测器中间部位，边缘部分值远小于主要数据值
+		\item \small 一方面，作差分图（下图）可见主要数据集中在探测器中间部位，边缘部分值远小于主要数据值
 		        
-		\item 另一方面，绘制对数坐标图可见边缘数值无规律波动
+		\item \small 另一方面，绘制对数坐标图可见边缘数值无规律波动
 		        
 	\end{itemize}
 	  
 	同时，根据对数坐标图，考虑噪声水平约为0.3，筛选小于0.3的值进行进一步检验。画出分布直方图，猜想其近似服从均为分布；利用SPSS做Kolmogorov-Smirnov均匀分布检验。
-	  
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\textwidth]{./pic/fujian5_1.png}\\
+	\end{figure}
 \end{frame}
   
   
   
 \begin{frame}{去噪预处理}
 	  
-	我是图片！\\
+
+	\small 探测器两边的相邻两个传感器的数据差集中在0 附近，因此我们推测这些数据是由测量时的误差引起的波动。
 	  
-	检验结果接受原假设（均匀分布），均值为0.1549，显著性水平0.157\\
+	\small 检验结果接受原假设（均匀分布），均值为0.1549，显著性水平0.157\\
 	  
-	因此，对原数据做去噪处理，本文将非主信号区域的噪声删去并在主要信号值上减去噪声均值。之后再按照问题二所述方法进行预处理，并分别使用ART算法与FBP算法进行重建。
+	\small 因此，对原数据做去噪处理，本文将非主信号区域的噪声删去并在主要信号值上减去噪声均值。之后再按照问题二所述方法进行预处理，并分别使用ART算法与FBP算法进行重建。
 	  
 \end{frame}
   
   
   
-\begin{frame}
-	  
-	我是图片！
-	  
+\begin{frame}{求解结果}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\textwidth]{./pic/res3.png}\\
+	\end{figure}
+	\small 依然，使用FBP求解结果较小。ART更加精确。  
 \end{frame}
   
   
@@ -383,78 +467,131 @@
 	角度计算的均方根误差为0.0191rad，相比噪声较小时，参数标定的误差有所增大，但仍然在很小的范围内。
 \end{frame}
 
-
-\begin{frame}{1. Introduction 引言}
-	\framesubtitle{frame subtitle 页面副标题}
-	This nuaa-JUB.tex is a \LaTeX \ Beamer template using the JUB Beamer theme  produced by Billy Okal.
-	
-	\bigskip
-	
-	此nuaa-JUB.tex文件是一个使用了Billy Okal制作的JUB Beam主题的\LaTeX \ Beamer模板。
-	
-	\begin{figure}
-		\begin{center}
-			\includegraphics[scale=0.1]{latex.png}
-		\end{center}
-		\caption{\LaTeX \ beamer}
-		\label{Fig:latex_beamer}
-	\end{figure}
-\end{frame} % 
-
-\section{Mathematical model}
-\label{Sec:model}
-\begin{frame}{2. Mathematical model 数学模型}
-	Lists 列表
-	
+\begin{frame}{新标定模板的设计}
+	为何设计新模板？
 	\begin{itemize}
-		\item Apple
-		\item Orange
-		\item Banana
-	\end{itemize}
+		\item 模板易于加工。
+		\item 模板中的特征图形可以写出简洁的解析表达式。
+	  \end{itemize}
+	在第一问中，我们未使用特殊的几何特征点，直接利用数据求解。在自行设计模板中，考虑使用几何信息来推算标定参数的初值。
+\end{frame}
+
+\begin{frame}{新标定模板的设计}
+	\doublepic{sketch1.png}{新标定模板的示意图}{sketch2.png}{几何关系示意图}
+	有对称信息，但不中心对称。几何形状简单，便于寻找特殊点。
+\end{frame}
+
+\begin{frame}{新标定模板的设计}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{./pic/merge1.png}\\
+	\end{figure}
+	\small 根据第1个角度和第180个角度时两个圆的投影相对位置，得圆心坐标：
+	\[ i_R = \frac{i_1 + i_2 + i_1' + i_2'}{4} \]
+	\[d_0 = (256.5 - i_R) \times \Delta d\]
 	
+\end{frame}
+
+\begin{frame}{新标定模板的设计}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{./pic/merge1.png}\\
+	\end{figure}
+	\small 当前探测器与\(x\)轴的夹角\(\phi\)的估计值为：
+	\[ \phi = arcsin\left(  \frac{(R1_{c1} - R2_{c1})\Delta d}{C_1 C_2}   \right)\]
+	\small 再考察第90组CT观测数据，此时探测器相对于初始位置逆时针旋转了大约90°。\(\angle ROD = arctan(HD/H'D') \)，\(OR\)与\(x\)轴的夹角为 \( \theta _R = \phi + \pi/2 - \angle ROD \)，则\(R\)坐标为:
+	\[x_0 = |OR| \times cos(\theta_R), y_0 = |OR| \times sin(\theta_R) \]
+	
+\end{frame}
+
+\begin{frame}{新标定模板的使用评价}
+	\midpic{Error.png}{\(x_0\)相对误差示意图}
+	\small 可见60\% 的角度中，\(x_0\)的相对误差小于0.5\%，误差为取最大值3.78\%。经分析，误差偏高的原因为解非线性规划时陷入局部最优解。这时用得到的解作为初始值，使用模拟退火算法继续求解，可以将最终的相对误差缩小到0.13\%。
+	\small 与第一问中的算法相比，本模板只进行\textbf{一次}迭代优化即可得到精度较高的结果，计算量相对较小。
+\end{frame}
+
+
+
+
+\section{心得与体会}
+\begin{frame}{赛前}
 	\begin{enumerate}
-		\item Monday
-		\item Tuesday
-		\item Wednesday
+	  \item 五月六月，总结得失，制定计划。
+		\begin{enumerate}
+		  \item[-] 比赛四天，规划好时间
+		  \item[-] 留出充足时间写论文
+		\end{enumerate}
+	  \item 八月九月，准备国赛，扩充知识。
+		\begin{enumerate}
+		  \item[-] 最优化求解算法——SA, GA, NN, etc.
+		  \item[-] 数值计算——Runge-Kutta, Simpson, Gauss, etc
+		  \item[-] 模型建立——\emph{Optimization Model with LINGO}, 往届国赛题
+		  \item[-] 一定要有书面笔记，给自己和队友交代
+		\end{enumerate}
+	  \item 赛前一定要制定好比赛期间的时间轴！
 	\end{enumerate}
-	
-	\begin{description}
-		\item[Description list] is a type of list to describe items.
-		\item[Description list] 是一种用于描述的列表。
-	\end{description}
-\end{frame} 
+  \end{frame}
 
-\section{Empirical experiments}
-\label{Sec:experiments}
-\begin{frame}{3. Empirical experiments 实验}
-	Blocks 区块
-	
-	\begin{definition}[Pythagorean theorem]
-		The Pythagorean theorem is a fundamental relation in Euclidean geometry among the three sides of a right triangle.
-	\end{definition}
-	
-	\begin{theorem}[Pythagorean theorem]
-		$a^2 + b^2 = c^2$
-	\end{theorem}
-\end{frame} 
-
-\begin{frame}{3. Empirical experiments 实验}
-	Blocks 区块
-	
-	\begin{exampleblock}{For example}
-		$3^2 + 4^2 = 5^2$
-	\end{exampleblock}
-	
-	\begin{alertblock}{Note}
-		Note that the Pythagorean theorem can only be applied to right triangles.
-	\end{alertblock}
-\end{frame} 
-
-\begin{frame}
+  \begin{frame}{我们的比赛时间轴}
+	\begin{enumerate}
+	  \item \small 9月14日20：00发题，24：00前把整个题目框架搭好。
+	  \item \small 9月15日中午之前，第一问模型建立，开始求解。
+	  \item \small 9月15日20：00前把第一问结束。开始着手第二三问，建立二三问模型。
+	  \item \small 9月16日中午之前，第二问第三问模型基本建成，开始求解。同时着手稳定性分析。抽空思考自己设计的模板。
+	  \item \small 9月16日下午开始写论文，把能写的先写掉。
+	  \item \small 9月16日24：00前把第二问和第三问解决。
+	  \item \small 9月17日写论文，完善模型及求解，完成第四问。
+	\end{enumerate}
 	\begin{center}
-		\Huge{\bf{Thank you!}}
+	  \textbf{总体先紧后松，留充足时间推敲论文，微调模型。}
+	  
+	  \textbf{计划赶不上变化，但一定要预留充足时间。}
 	\end{center}
-\end{frame} % ================================================================
+  \end{frame}
+
+  \begin{frame}{MATLAB创新奖}
+	\begin{enumerate}
+	  \item \small 手写算法——标定，FBP，ART。
+	  \item \small 只使用数据，不考虑几何特殊点——基于丰富的求解经验。
+	  \item \small 准确发现第三问与第二问的区别——加均匀分布噪声。
+	  \item \small 论文框架完整——第一到四问模型+稳定性分析+模型评价。
+	\end{enumerate}
+	\small MATLAB中有自带解决该问题的函数iradon.m，我们是五个优秀论文组中唯一没用该函数的队伍。
+	\end{frame}
+
+	\begin{frame}{MATLAB程序的有趣之处}
+		%% TODO: 研究一下其他组的第一问
+		这里应该有其他组第一问的做法，和我们对比一波
+
+	\end{frame}
+
+	\begin{frame}{后续的改进}
+		\begin{itemize}
+			\item \textbf{ART（代数迭代法）的改进}
+		\end{itemize}
+		\small \textbf{投影矩阵：}设图片共有\(J = n\times n\)个像素，共有$I$条射线进行扫描，将射线看作宽为\(\tau\)的粗线，将图片像素值集中在像素的中心，则有\(I\times J\)大小的投影矩阵$R$，其元素定义为
+		\[r_{ij}=
+		\begin{cases}
+		1 ,& \text{i号射线通过j号像素中心}\\
+		0 ,& \text{其他}
+		\end{cases}\]
+		\textbf{原方法：}构造256$\times$256的矩阵$r$，令其中一列等于1，旋转$r$，得到投影值。
+
+		\textbf{新方法}：严格按照探测器发出的射线，写出射线方程，判断某个像素点有没有被射线经过。
+	\end{frame}
+
+	\begin{frame}{后续的改进}
+		\begin{itemize}
+			\item \textbf{FBP（滤波反投影）的改进}
+		\end{itemize}
+
+
+		\small FBP中反投影矩阵的维度一定为探测单元数，即512。实际图像中存在将结果resize为256*256的过程，在其中需要乘以一个系数。\\
+		
+
+		因为在连续模型中使用FFT会导致舍入误差的出现，加上FBP中有一个低通滤波，会使数据有一定失真，导致FBP的结果比实际结果要小。
+	\end{frame}
+
 \section{参考文献}
 \begin{frame}{参考文献}
 	\begin{thebibliography}{0}
@@ -475,3 +612,61 @@
 
 %\end{CJK*}
 \end{document}
+
+% \label{Sec:model}
+% \begin{frame}{2. Mathematical model 数学模型}
+% 	Lists 列表
+	
+% 	\begin{description}
+% 		\item[Description list] is a type of list to describe items.
+% 		\item[Description list] 是一种用于描述的列表。
+% 	\end{description}
+% \end{frame} 
+% \begin{frame}{1. Introduction 引言}
+% 	\framesubtitle{frame subtitle 页面副标题}
+% 	This nuaa-JUB.tex is a \LaTeX \ Beamer template using the JUB Beamer theme  produced by Billy Okal.
+	
+% 	\bigskip
+	
+% 	此nuaa-JUB.tex文件是一个使用了Billy Okal制作的JUB Beam主题的\LaTeX \ Beamer模板。
+	
+% 	\begin{figure}
+% 		\begin{center}
+% 			\includegraphics[scale=0.1]{latex.png}
+% 		\end{center}
+% 		\caption{\LaTeX \ beamer}
+% 		\label{Fig:latex_beamer}
+% 	\end{figure}
+% \end{frame} % 
+% \section{Empirical experiments}
+% \label{Sec:experiments}
+% \begin{frame}{3. Empirical experiments 实验}
+% 	Blocks 区块
+	
+% 	\begin{definition}[Pythagorean theorem]
+% 		The Pythagorean theorem is a fundamental relation in Euclidean geometry among the three sides of a right triangle.
+% 	\end{definition}
+	
+% 	\begin{theorem}[Pythagorean theorem]
+% 		$a^2 + b^2 = c^2$
+% 	\end{theorem}
+% \end{frame} 
+
+% \begin{frame}{3. Empirical experiments 实验}
+% 	Blocks 区块
+	
+% 	\begin{exampleblock}{For example}
+% 		$3^2 + 4^2 = 5^2$
+% 	\end{exampleblock}
+	
+% 	\begin{alertblock}{Note}
+% 		Note that the Pythagorean theorem can only be applied to right triangles.
+% 	\end{alertblock}
+% \end{frame} 
+
+% \begin{frame}
+% 	\begin{center}
+% 		\Huge{\bf{Thank you!}}
+% 	\end{center}
+% \end{frame} 
+% ================================================================
