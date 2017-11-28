@@ -20,17 +20,22 @@
 % 7. small-corner.pdf
 
 % \documentclass[handout]{beamer}
-\documentclass{beamer} 
+\documentclass[serif]{beamer} %
+\usepackage{pxfonts} %
+
 \usetheme{JUB}
-\def\mathfamilydefault{\rmdefault} 
-%\usepackage{CJKutf8}
+
 \usepackage[UTF8]{ctex}  
 \usepackage{booktabs}
 %导入 ctex 宏包，添加中文支持
 %\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[scaled]{helvet}
+%\usepackage[scaled]{helvet}
+%\usepackage{name}
+%\def\mathfamilydefault{\rmdefault} 
+%\usepackage{CJKutf8}
+
 \usepackage{libertine}  
+
 
 %简单的插入三种大小的图片的命令
 \newcommand{\maxpic}[2]{  \begin{figure}[H]
