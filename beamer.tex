@@ -564,6 +564,55 @@
 	\small 与第一问中的算法相比，本模板只进行\textbf{一次}迭代优化即可得到精度较高的结果，计算量相对较小。
 \end{frame}
 
+\section{改进与讨论}
+
+%下面这个part有bug，暂时还没找到
+\begin{frame}{\textbf{ART（代数迭代法）的改进}}
+	重新定义\textbf{投影矩阵}：设图片共有\(J = n\times n\)个像素，共有$I$条射线进行扫描，$R=(r_{ij})_{I\times J}$，其中$r_ij$表示射线$i$与像素$j$相交的线段长度。
+
+	\textbf{原方法：}构造256$\times$256的矩阵$r$，令其中一列等于1，旋转$r$，得到投影值。
+
+	\textbf{新方法：}
+	\begin{itemize}
+		\item 写出直线方程
+		\item 求出指定行与直线相交最左与最右的像素
+		\item 顺序计算上述范围内每个像素的$r$值
+		\item 遍历所有的行
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\begin{table}[H]
+		\caption{改进后的第三问重建结果}
+		\centering
+		\begin{tabular}{cccccc}
+			\toprule
+			\text{No.}   & 1 & 2 & 3 & 4 & 5  \\
+			\midrule
+			\text{$Value$} & 0.0212 & 2.8719 & 7.0425 & 0.0136 & 0.0349 \\
+			\text{$Value_F$} & 0.0192 & 2.8713 & 7.0418 & 0.0133 & 0.0339  \\
+			$Value_R$ & 0.0063 & 2.5658 & 6.8698 & 0.0076 & 0.0185  \\
+			\midrule
+			\text{No.}   & 6 & 7 & 8 & 9 & 10 \\
+			\midrule
+			\text{$Value$}  & 3.2979 & 6.2002 & 0.0413 & 7.8576 & 0.0051 \\
+			\text{$Value_F$} & 3.2973 & 6.1999 & 0.0408 & 7.8566 & 0.0049 \\
+			$Value_R$  & 3.3793 & 6.2005 & 0.0025 & 8.2590 & 0.0071 \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+		\item \textbf{FBP（滤波反投影）的讨论}
+	\end{itemize}
+
+	FBP中反投影矩阵的维度一定为探测单元数，即512。实际图像中存在将结果resize为256*256的过程，在其中需要乘以一个系数；同时在缩放过程中，像素的值也需要做调整。
+
+	另一方面，因为在连续模型中使用FFT会导致舍入误差的出现，加上FBP中有一个低通滤波，会使数据有一定失真，导致FBP的结果比实际结果要小。
+\end{frame}
+
 \section{参考文献}
 \begin{frame}{参考文献}
 	\begin{thebibliography}{0}
@@ -582,7 +631,7 @@
 \bibliographystyle{IEEEtran} % comment this line if nothing is cited
 \bibliography{bibliography_file} % comment this line if nothing is cited
 
-\section{心得与体会}
+\section*{心得与体会}
 \begin{frame}{赛前}
 	\begin{enumerate}
 	  \item 五月六月，总结得失，制定计划。
@@ -617,7 +666,7 @@
 	  \textbf{计划赶不上变化，但一定要预留充足时间。}
 	\end{center}
   \end{frame}
-  \begin{frame}{MATLAB创新奖}
+  \begin{frame}{MATLAB}
   	\begin{enumerate}
 	  \item \small 手写算法——标定，FBP，ART。
 	  \item \small 最开始利用几何信息进行初步分析，比较之后决定不使用几何信息求解。
@@ -629,48 +678,29 @@
 	
 	\end{frame}
 
-	\begin{frame}{MATLAB程序的有趣之处}
-	\begin{table}[H]
-		\centering
-		\caption{优秀论文第一问解法对比}
-		\begin{tabular}{ccccc}
-			\toprule
-			\text{No.} & A156 & A298 & A053 & A090\\
-			\midrule
-			$\Delta d$ & \text{几何特征+搜索} & \text{几何特征} & ? & ? \\ 
-			$d_0$ & \text{未解} & \text{未解} & ? & ? \\
-			$(x_0,y_0)$ & \text{几何特征+搜索} & \text{几何特征} & ? & ? \\
-			$\mu$ & \text{小圆平均} & \text{特征位置} & ? & ? \\
-			$\theta$ & \text{遍历搜索} & \text{非线性优化} & ? & ?\\
-			\bottomrule
-		\end{tabular}
-	\end{table}
+	% \begin{frame}{MATLAB程序的有趣之处}
+	% \begin{table}[H]
+	% 	\centering
+	% 	\caption{优秀论文第一问解法对比}
+	% 	\begin{tabular}{ccccc}
+	% 		\toprule
+	% 		\text{No.} & A156 & A298 & A053 & A090\\
+	% 		\midrule
+	% 		$\Delta d$ & \text{几何特征+搜索} & \text{几何特征} & ? & ? \\ 
+	% 		$d_0$ & \text{未解} & \text{未解} & ? & ? \\
+	% 		$(x_0,y_0)$ & \text{几何特征+搜索} & \text{几何特征} & ? & ? \\
+	% 		$\mu$ & \text{小圆平均} & \text{特征位置} & ? & ? \\
+	% 		$\theta$ & \text{遍历搜索} & \text{非线性优化} & ? & ?\\
+	% 		\bottomrule
+	% 	\end{tabular}
+	% \end{table}
+	% \end{frame}
+
+	\begin{frame}
+		\begin{center}
+			\Huge{\bf{谢谢！}}
+		\end{center}
 	\end{frame}
-
-	\begin{frame}{后续的改进}
-		\begin{itemize}
-			\item \textbf{ART（代数迭代法）的改进}
-		\end{itemize}
-		\small \textbf{投影矩阵：}设图片共有\(J = n\times n\)个像素，共有$I$条射线进行扫描，将射线看作宽为\(\tau\)的粗线，将图片像素值集中在像素的中心，则有\(I\times J\)大小的投影矩阵$R$，其元素定义为
-		\[r_{ij}=
-		\begin{cases}
-		1 ,& \text{i号射线通过j号像素中心}\\
-		0 ,& \text{其他}
-		\end{cases}\]
-		\textbf{原方法：}构造256$\times$256的矩阵$r$，令其中一列等于1，旋转$r$，得到投影值。
-
-		\textbf{新方法}：严格按照探测器发出的射线，写出射线方程，判断某个像素点有没有被射线经过。
-	\end{frame}
-
-	\begin{frame}{后续的改进}
-		\begin{itemize}
-			\item \textbf{FBP（滤波反投影）的改进}
-		\end{itemize}
-		\small FBP中反投影矩阵的维度一定为探测单元数，即512。实际图像中存在将结果resize为256*256的过程，在其中需要乘以一个系数。\\
-		因为在连续模型中使用FFT会导致舍入误差的出现，加上FBP中有一个低通滤波，会使数据有一定失真，导致FBP的结果比实际结果要小。
-	\end{frame}
-
-
 \end{document}
 
 % \label{Sec:model}

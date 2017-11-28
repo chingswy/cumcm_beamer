@@ -4,5 +4,5 @@
 \beamer@sectionintoc {3}{问题二的求解}{15}{0}{3}
 \beamer@sectionintoc {4}{问题三的求解}{26}{0}{4}
 \beamer@sectionintoc {5}{问题四的求解}{32}{0}{5}
-\beamer@sectionintoc {6}{参考文献}{44}{0}{6}
-\beamer@sectionintoc {7}{心得与体会}{46}{0}{7}
+\beamer@sectionintoc {6}{改进与讨论}{44}{0}{6}
+\beamer@sectionintoc {7}{参考文献}{48}{0}{7}
