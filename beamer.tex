@@ -20,22 +20,17 @@
 % 7. small-corner.pdf
 
 % \documentclass[handout]{beamer}
-\documentclass[serif]{beamer} %
-\usepackage{pxfonts} %
-
+\documentclass{beamer} 
 \usetheme{JUB}
-
+\def\mathfamilydefault{\rmdefault} 
+%\usepackage{CJKutf8}
 \usepackage[UTF8]{ctex}  
 \usepackage{booktabs}
 %导入 ctex 宏包，添加中文支持
 %\usepackage[utf8]{inputenc}
-%\usepackage[scaled]{helvet}
-%\usepackage{name}
-%\def\mathfamilydefault{\rmdefault} 
-%\usepackage{CJKutf8}
-
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
 \usepackage{libertine}  
-
 
 %简单的插入三种大小的图片的命令
 \newcommand{\maxpic}[2]{  \begin{figure}[H]
@@ -228,7 +223,7 @@
 
 \begin{frame}{求解思路}
 	\begin{enumerate}
-		\item 预备知识：拉东定理（Radon Theorem)
+		\item 预备知识：拉东变换（Radon Transform)
 		\item 连续模型——滤波反投影算法（FBP）
 		\item 离散模型——代数迭代法（ART）
 	\end{enumerate}
@@ -260,7 +255,7 @@
 
 
 \begin{frame}{连续模型}
-	\begin{theorem}	
+	\begin{theorem}	{Fourier Slice Theorem}
 		Line Intergal of the Picture
 		\[ P_\theta (t) = \int_{(\theta, t) line}f(x, y)\ ds \]
 		FT of $P_\theta (t)$
@@ -285,11 +280,11 @@
 		\item 应用iFFT于滤波后的结果，得滤波后的投影矩阵
 		        
 		\item 对投影矩阵插值，进行反投影，本文使用nearest方式
-		        
+		%ifft得到的是探测器各单元的值，反投影将这个值“抹”到该单元对应的射线经过的像素上，邻近插值就是为像素找到经过它的射线        
 		\item 遍历所有的$\theta$    
 	\end{enumerate}
 \end{frame}
-% Ramp滤波是怎么回事？
+% Ramp滤波是怎么回事？Ramp就是频谱上三角形滤波器，滤去一些高频信号
 % 插值又是个啥，我咋不记得
   
   
@@ -307,7 +302,7 @@
 	ART（代数迭代法）的思路是每次校正一条射线路径上的像素值，使得该条真伪射线和间误差减小。迭代公式为：ART（代数迭代法）的思路是每次校正一条射线路径上的像素值，使得该条真伪射线和间误差减小。迭代公式为：
 	  
 	\begin{equation}
-		x^{(k+1)}=x^{(k)}+\lambda^{(k)}\frac{q_{i_{k}}-r_{i_{k}}x^{(k)}}{||r_{i_{k}}||^{2}}r_{i_{k}}
+		x^{(k+1)}=x^{(k)}+\lambda^{(k)}\frac{p_{i_{k}}-r_{i_{k}}x^{(k)}}{||r_{i_{k}}||^{2}}r_{i_{k}}
 	\end{equation}
 	  
 	式中，k是迭代次数，$k=0,1 \ldots$，$i_{k}=k(modI)+1$；$\lambda^{(k)}$称为松弛参数，本文取$\lambda^{(k)}=0.25$
@@ -328,7 +323,7 @@
 	\begin{equation}
 		NLM(x_{i})=\sum_{j\in N_{i}} w(i,j)x_{j}
 	\end{equation}
-	其中,\(w(i,j)=\frac{e^{-||x_{V_{i}}-x_{V_{j}}||^2/h^2}}{\sum_{j\in N_{i}}e^{-||x_{V_{i}}-x_{V_{j}}||^2/h^2}}\)，$N_{i}$表示像素i的邻域，本文取5*5像素窗口，$x_{V_{i}}$是像素i邻域像素的值构成的矩阵，这里矩阵模的意义是各元素平方和的平方根$h$控制滤波强度，本文取为0.5
+	其中,\(w(i,j)=\frac{e^{-||x_{V_{i}}-x_{V_{j}}||^2/h^2}}{\sum_{j\in N_{i}}e^{-||x_{V_{i}}-x_{V_{j}}||^2/h^2}}\)，$N_{i}$表示像素i的邻域，本文取5*5像素窗口，$x_{V_{i}}$是像素i邻域像素的值构成的矩阵，这里矩阵模的意义是各元素平方和的平方根;$h$控制滤波强度，本文取为0.5
 \end{frame}
   
   
@@ -338,16 +333,46 @@
 	\small 重建之前，先将数据进行预处理，变换到旋转中心与原点重合且关于过原点的垂线对称的参考探测器上\\
 	  
 	\begin{figure}[H]
+		\begin{minipage}[H]{0.5\textwidth}
 		\centering
-		\includegraphics[width=0.5\textwidth]{./pic/DOT.jpg}\\
+		\includegraphics[width=\textwidth]{./pic/P2_FBP.jpg}
+		\end{minipage}
+		\begin{minipage}[H]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./pic/P2-ART-5-NLM.jpg}
+		\end{minipage}
 	\end{figure}
 	  
 	算法输出结果再做适当的缩放和比例处理即为最终结果。
 	  
 \end{frame}
-  
-  
-  
+
+
+
+\begin{frame}{求解结果}
+
+	\small 以下为指定点处的重建值
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.3\textwidth]{./pic/DOT.jpg}
+	\end{figure}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ccccccccccc}
+			\toprule
+			\text{No.}   & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+			\midrule
+			\text{Value} & 0.0070 & 0.6943 & 0.0106 & 0.8269 & 0.7285 & 0.9269 & 0.9111 & 0.0000 & 0.0062 & 0.0000 \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+
+\end{frame}		
+
+
+
 \section{问题三的求解}
   
 \begin{frame}{求解思路}
@@ -391,7 +416,10 @@
 	\small 探测器两边的相邻两个传感器的数据差集中在0 附近，因此我们推测这些数据是由测量时的误差引起的波动。
 	  
 	\small 检验结果接受原假设（均匀分布），均值为0.1549，显著性水平0.157\\
-	  
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\textwidth]{./pic/K-S.jpg}\\
+	\end{figure}
 	\small 因此，对原数据做去噪处理，本文将非主信号区域的噪声删去并在主要信号值上减去噪声均值。之后再按照问题二所述方法进行预处理，并分别使用ART算法与FBP算法进行重建。
 	  
 \end{frame}
@@ -401,21 +429,35 @@
 \begin{frame}{求解结果}
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.5\textwidth]{./pic/res3.png}\\
+		\includegraphics[width=0.3\textwidth]{./pic/res3.png}\\
 	\end{figure}
-	\small 依然，使用FBP求解结果较小。ART更加精确。  
+
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ccccccccccc}
+			\toprule
+			\text{No.}   & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+			\midrule
+			\text{Value} & 0.0212 & 3.5766 & 8.5109 & 0.0136 & 0.0349 & 3.8526 & 8.1648 & 0.0413 & 7.9565 & 0.0051 \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+
+	\small 依然，使用FBP求解结果较小。ART更加精确。
 \end{frame}
   
   
   
-\begin{frame}{评价及后续改进}
+\begin{frame}{对比与评价}
 	  
 	对比两种算法，ART-NLM算法的重建速度较慢，成像质量略差与FBP。我们认为这是由于投影矩阵$R$元素为0-1变量造成的；每次做迭代修正时，射线边缘的像素也同时受到等值的修正，造成了一定的偏差\\
 	  
-	之后，我们重写了算法，定义\(r_ij\)为射线$i$与像素$j$交得的线段长度，ART-NLM重建结果与标准值十分接近，表现出极佳的精度。
-	  
 \end{frame}
+
+
+
 \section{问题四的求解}
+
 \begin{frame}{精度分析}
 	在这个问题中，我们采用模拟仿真的方法进行精度分析。在问题一模型的基础上，我们通过更改位置参数信息，进行模拟，得到这种情况下的\(512\times180\)个数据，再使用我们的模型，在这组数据的基础上进行标定，计算得出标定所需参数，与设定的理论值进行对比，即可得到模型的精度信息。
 \end{frame}
@@ -441,8 +483,10 @@
 \begin{frame}{稳定性分析}
 	使用计算机进行仿真，人为地在投影坐标中增加不同等级的噪声数据，再以此进行模板标定。
 	与精度分析相同，设置参数\(d_0 = 1,\mu = 1.5,x_0 = 10,y_0 = 10\)，观测角度依次为\(\phi_i = i^\circ,i = 1,\ldots,180\)，使用(1)中模型，模拟生成180组探测器数据。根据这种方法模拟得到的探测器接受信息中的数据范围在(0,120)之间，我们给原数据增加在(-15,15)范围内均匀分布的随机噪声。从数据图中可以看出，数据信息较原数据更模糊，且噪声较多。
-	
-	这里有一个问题就是实际的探测器数值是不会有负值的，我们在做的时候没有考虑到这一点，导致生成的探测器数据会有负值。
+
+	\begin{alertblock}{Note}
+		\small 这里有一个问题就是实际的探测器数值是不会有负值的，我们在做的时候没有考虑到这一点，导致生成的探测器数据会有负值。
+	\end{alertblock}
 \end{frame}
 
 \begin{frame}{稳定性分析}
@@ -516,6 +560,59 @@
 \end{frame}
 
 
+\section{改进与讨论}
+
+%下面这个part有bug，暂时还没找到
+% \begin{frame}{\textbf{ART（代数迭代法）的改进}}
+% 	\small 重新定义\textbf{投影矩阵}：设图片共有\(J = n\times n\)个像素，共有$I$条射线进行扫描，$R=(r_{ij})_{I\times J}$，其中$r_ij$表示射线$i$与像素$j$相交的线段长度
+
+% 	\textbf{原方法：}构造256$\times$256的矩阵$r$，令其中一列等于1，旋转$r$，得到投影值。
+% 	\textbf{新方法：}
+% 	\begin{itemize}
+% 		\item 写出直线方程
+% 		\item 求出指定行与直线相交最左与最右的像素
+% 		\item 顺序计算上述范围内每个像素的$r$值
+% 		\item 遍历所有的行
+% 	\end{itemize}
+
+% 	\begin{table}[H]
+% 		\caption{改进后的第三问重建结果}
+% 		\centering
+% 		\begin{tabular}{ccccccccccc}
+% 			\toprule
+% 			\text{No.}   & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+% 			\midrule
+% 			\text{Value} & 0.0212 & 2.8719 & 7.0425 & 0.0136 & 0.0349 & 3.2979 & 6.2002 & 0.0413 & 7.8576 & 0.0051 \\
+% 			\text{Value_F} & 0.0192 & 2.8713 & 7.0418 & 0.0133 & 0.0339 & 3.2973 & 6.1999 & 0.0408 & 7.8566 & 0.0049 \\
+% 			\text{Value_R} & 0.0063 & 2.5658 & 6.8698 & 0.0076 & 0.0185 & 3.3793 & 6.2005 & 0.0025 & 8.2590 & 0.0071 \\
+% 			\bottomrule
+% 		\end{tabular}
+% 	\end{table}
+% \end{frame}
+
+\begin{frame}
+	\begin{itemize}
+		\item \textbf{FBP（滤波反投影）的讨论}
+	\end{itemize}
+
+	\small FBP中反投影矩阵的维度一定为探测单元数，即512。实际图像中存在将结果resize为256*256的过程，在其中需要乘以一个系数；同时在缩放过程中，像素的值也需要做调整\\
+	\small 另一方面，因为在连续模型中使用FFT会导致舍入误差的出现，加上FBP中有一个低通滤波，会使数据有一定失真，导致FBP的结果比实际结果要小。
+\end{frame}
+
+\section{参考文献}
+\begin{frame}{参考文献}
+	\begin{thebibliography}{0}
+		\bibitem{toumo}
+		Kak A C. BOOKS AND PUBLICATIONS:"Principles of Computerized Tomographic Imaging"[J]. Medical Physics, 2002, 29(1):107.
+		    
+		\bibitem{nlm}
+		J. Huang et al, "Sparse angular CT reconstruction using non-local means based iterative-correction POCS," Computers in Biology and Medicine, vol. 41, (4), pp. 195-205, 2011.
+		    
+		\bibitem{ct1}庄天戈. CT原理与算法[M]. 上海交通大学出版社, 1992.
+		\bibitem{radon}林世明, W.-M.Boerner. 离散Radon变换[J]. 西北工业大学学报, 1988(2):49-56.
+	\end{thebibliography}
+\end{frame} % 
+
 
 
 \section{心得与体会}
@@ -535,11 +632,11 @@
 		\end{enumerate}
 	  \item 赛前一定要制定好比赛期间的时间轴！
 	\end{enumerate}
-  \end{frame}
+\end{frame}
 
-  \begin{frame}{我们的比赛时间轴}
+\begin{frame}{我们的比赛时间轴}
 	\begin{enumerate}
-	  \item \small 9月14日20：00发题，24：00前把整个题目框架搭好。
+	  \item \small 9月14日20：00发题，24：00前确定题目，把整个题目框架搭好。
 	  \item \small 9月15日中午之前，第一问模型建立，开始求解。
 	  \item \small 9月15日20：00前把第一问结束。开始着手第二三问，建立二三问模型。
 	  \item \small 9月16日中午之前，第二问第三问模型基本建成，开始求解。同时着手稳定性分析。抽空思考自己设计的模板。
@@ -552,65 +649,36 @@
 	  
 	  \textbf{计划赶不上变化，但一定要预留充足时间。}
 	\end{center}
-  \end{frame}
+\end{frame}
 
-  \begin{frame}{MATLAB创新奖}
+\begin{frame}{MATLAB创新奖}
 	\begin{enumerate}
-	  \item \small 手写算法——标定，FBP，ART。
+	  \item \small 原创算法——标定，FBP，ART。
 	  \item \small 只使用数据，不考虑几何特殊点——基于丰富的求解经验。
 	  \item \small 准确发现第三问与第二问的区别——加均匀分布噪声。
 	  \item \small 论文框架完整——第一到四问模型+稳定性分析+模型评价。
 	\end{enumerate}
-	\small MATLAB中有自带解决该问题的函数iradon.m，我们是五个优秀论文组中唯一没用该函数的队伍。
-	\end{frame}
+	\small MATLAB中有自带解决该问题的函数iradon.m，我们是五个优秀论文组中唯一没用该函数的队伍；同时我们是五个优秀论文组分析了数据噪声水平的队伍。
+\end{frame}
 
-	\begin{frame}{MATLAB程序的有趣之处}
-		%% TODO: 研究一下其他组的第一问
-		这里应该有其他组第一问的做法，和我们对比一波
+\begin{frame}{MATLAB程序的有趣之处}
+	%% TODO: 研究一下其他组的第一问
+	%woc bug在哪里啊！！！！
+	% \begin{table}[H]
+	% 	\centering
+	% 	\caption{优秀论文第一问解法对比}
+	% 	\begin{tabular}{ccccc}
+	% 		\text{No.} & A156 & A298 & A053 & A090\\
+	% 		$\Delta$ & \text{几何特征+搜索} & \text{几何特征} & ? & ? \\
+	% 		\text{d_0} & \text{未解} & \text{未解} & ? & ? \\
+	% 		\text{(x_0,y_0)} & \text{几何特征+搜索} & \text{几何特征} & ? & ? \\
+	% 		$\mu$ & \text{小圆平均} & \text{特征位置} & ? & ? \\
+	% 		$\theta$ & \text{遍历搜索} & \text{非线性优化} & ？& ？\\
+	% 	\end{tabular}
+	% \end{table}
 
-	\end{frame}
+\end{frame}
 
-	\begin{frame}{后续的改进}
-		\begin{itemize}
-			\item \textbf{ART（代数迭代法）的改进}
-		\end{itemize}
-		\small \textbf{投影矩阵：}设图片共有\(J = n\times n\)个像素，共有$I$条射线进行扫描，将射线看作宽为\(\tau\)的粗线，将图片像素值集中在像素的中心，则有\(I\times J\)大小的投影矩阵$R$，其元素定义为
-		\[r_{ij}=
-		\begin{cases}
-		1 ,& \text{i号射线通过j号像素中心}\\
-		0 ,& \text{其他}
-		\end{cases}\]
-		\textbf{原方法：}构造256$\times$256的矩阵$r$，令其中一列等于1，旋转$r$，得到投影值。
-
-		\textbf{新方法}：严格按照探测器发出的射线，写出射线方程，判断某个像素点有没有被射线经过。
-	\end{frame}
-
-	\begin{frame}{后续的改进}
-		\begin{itemize}
-			\item \textbf{FBP（滤波反投影）的改进}
-		\end{itemize}
-
-
-		\small FBP中反投影矩阵的维度一定为探测单元数，即512。实际图像中存在将结果resize为256*256的过程，在其中需要乘以一个系数。\\
-		
-
-		因为在连续模型中使用FFT会导致舍入误差的出现，加上FBP中有一个低通滤波，会使数据有一定失真，导致FBP的结果比实际结果要小。
-	\end{frame}
-
-\section{参考文献}
-\begin{frame}{参考文献}
-	\begin{thebibliography}{0}
-		    
-		\bibitem{toumo}
-		Kak A C. BOOKS AND PUBLICATIONS:"Principles of Computerized Tomographic Imaging"[J]. Medical Physics, 2002, 29(1):107.
-		    
-		\bibitem{nlm}
-		J. Huang et al, "Sparse angular CT reconstruction using non-local means based iterative-correction POCS," Computers in Biology and Medicine, vol. 41, (4), pp. 195-205, 2011.
-		    
-		\bibitem{ct1}庄天戈. CT原理与算法[M]. 上海交通大学出版社, 1992.
-		\bibitem{radon}林世明, W.-M.Boerner. 离散Radon变换[J]. 西北工业大学学报, 1988(2):49-56.
-	\end{thebibliography}
-\end{frame} % 
 
 \bibliographystyle{IEEEtran} % comment this line if nothing is cited
 \bibliography{bibliography_file} % comment this line if nothing is cited
