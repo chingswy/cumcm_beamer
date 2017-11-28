@@ -20,8 +20,9 @@
 % 7. small-corner.pdf
 
 % \documentclass[handout]{beamer}
-\documentclass[serif]{beamer} %
-\usepackage{pxfonts} %
+\documentclass{beamer} %
+%\usepackage{pxfonts} %
+\usefonttheme[onlymath]{serif}
 
 \usetheme{JUB}
 
@@ -36,6 +37,14 @@
 
 \usepackage{libertine}  
 
+\AtBeginSection[]
+{
+	\begin{frame}
+		\small
+        \tableofcontents[currentsection,hideallsubsections]
+    \end{frame}
+}
+% 设置每一section的前面放目录
 
 %简单的插入三种大小的图片的命令
 \newcommand{\maxpic}[2]{  \begin{figure}[H]
@@ -71,7 +80,6 @@
 \end{figure}}
 
 \begin{document} 
-%\begin{CJK*}{UTF8}{gbsn} % support for Chinese
 
 \title{CT系统参数标定及成像}
 %\subtitle{Subtitle  副标题} % optional
@@ -89,8 +97,14 @@
 
 \section{问题重述}
 \begin{frame}{问题背景}
-	\small CT系统是一种利用样品对射线的能量吸收特性对样品进行断层成像的技术，在不破坏样品的情况下获取样品内部的结构信息。问题中使用的是一种二维CT系统，探测器平面发出平行入射的X射线，探测器绕某固定的旋转中心逆时针旋转180次，可以获得180组接收信息，每组信息有512个等距单元的数据。
-	\midpic{Overall_Sketch.png}{整体示意图}
+	\begin{columns}[t] 
+		\begin{column}[c]{5cm} 
+			CT系统是一种利用样品对射线的能量吸收特性对样品进行断层成像的技术，在不破坏样品的情况下获取样品内部的结构信息。问题中使用的是一种二维CT系统，探测器平面发出平行入射的X射线，探测器绕某固定的旋转中心逆时针旋转180次，可以获得180组接收信息，每组信息有512个等距单元的数据。
+		\end{column} 
+		\begin{column}[c]{5cm} 
+			\maxpic{Overall_Sketch.png}{整体示意图}
+		\end{column} 
+	\end{columns}
 \end{frame} % 
 
 
@@ -139,7 +153,6 @@
 		\includegraphics[width=\textwidth]{./pic/fujian2.png}
 		\end{minipage}
 	\end{figure}
-
 \end{frame}
 
 \begin{frame}{初步计算参数}
@@ -150,28 +163,24 @@
 		\includegraphics[width=0.8\textwidth]{./pic/fitCir.png}\\
 		\caption{拟合圆上的数据}
 	  \end{figure}
-
 \end{frame}
-
-
 
 \begin{frame}{完整模型建立}
-	以正方形托盘的中心为坐标原点，椭圆中心与圆中心的连线方向为\(x\)轴，过坐标原点垂直于\(x\)轴方向为\(y\)轴，建立平面直角坐标系。在这一坐标系中，设CT系统的旋转中心坐标为\(R(x_0,y_0)\)，探测器平面与\(x\)轴的夹角为\(\theta\)，探测器中心与旋转中心在探测器平面上的投影的距离为\(d_0\)。
-	  
+	\begin{columns}[t] 
+		\begin{column}[c]{5cm} 
+			以正方形托盘的中心为坐标原点，椭圆中心与圆中心的连线方向为\(x\)轴，过坐标原点垂直于\(x\)轴方向为\(y\)轴，建立平面直角坐标系。在这一坐标系中，设CT系统的旋转中心坐标为\(R(x_0,y_0)\)，探测器平面与\(x\)轴的夹角为\(\theta\)，探测器中心与旋转中心在探测器平面上的投影的距离为\(d_0\)。  
+		\end{column} 
+		\begin{column}[c]{5cm} 
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=\textwidth]{pic/q13.png}
+				\end{center}
+				\caption{参数定义}
+				\label{Fig:xian}
+			\end{figure}
+		\end{column} 
+	\end{columns}
 \end{frame}
-
-
-
-\begin{frame}{参数定义}
-	\begin{figure}
-		\begin{center}
-			\includegraphics[scale=0.3]{pic/q13.png}
-		\end{center}
-		\caption{参数定义}
-		\label{Fig:xian}
-	\end{figure}
-\end{frame}
-
 
 
 \begin{frame}{求解长度}
@@ -186,8 +195,6 @@
 	\end{tiny}
 \end{frame}
 
-
-
 \begin{frame}{模型求解}
 	\textbf{迭代优化算法}
 	\begin{itemize}
@@ -197,8 +204,6 @@
 \end{frame}
 % 局部加权回归散点平滑法是什么
 % 为什么要平滑
-
-
 \begin{frame}{模型求解}
 	\textbf{迭代优化算法}
 	\begin{itemize}
@@ -210,9 +215,6 @@
 	% 妈的这里好像没法跨页写enumerate
 \end{frame}
 
-
-
-
 \begin{frame}{求解结果} 
 	\small 使用上述算法对模型进行求解，得到各个参数如下：
 	\[\mu = 1.7727,x_0 = -9.2696,y_0 = 6.2738\]
@@ -221,14 +223,11 @@
 	\midpic{q12.png}{标定板示意图}
 \end{frame}
 
-
-
-
 \section{问题二的求解}
 
 \begin{frame}{求解思路}
 	\begin{enumerate}
-		\item 预备知识：拉东定理（Radon Theorem)
+		\item 预备知识：拉东变换（Radon Transform)
 		\item 连续模型——滤波反投影算法（FBP）
 		\item 离散模型——代数迭代法（ART）
 	\end{enumerate}
@@ -238,8 +237,6 @@
 		\end{figure}
 \end{frame}
 
-
-
 \begin{frame}{数据预处理}
 	由问题一可知，由于安装过程的误差，CT系统的旋转中心并不在正方形的中心，由前文推导公式可知，探测器上的第\(i\)个传感器与坐标原点的沿探测器方向的距离为：
 	\[d' = x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d\]
@@ -248,8 +245,6 @@
 	\[d' = (i' - 256.5)\Delta d = x_0\cos\phi + y_0\sin\phi + d_0 +  (i - 256.5)\Delta d\]
 \end{frame}
 
-
-
 \begin{frame}{数据预处理}
 	则对于原始数据\( y = data(i,j)\)，可以得到新的转化后的数据
 	\[data_{pre}(i',j) = data(i(i'),j)\]
@@ -257,10 +252,8 @@
 	\midpic{datapre3.png}{数据预处理}
 \end{frame}
 
-
-
 \begin{frame}{连续模型}
-	\begin{theorem}	
+	\begin{theorem}{Fourier Slice Theorem}
 		Line Intergal of the Picture
 		\[ P_\theta (t) = \int_{(\theta, t) line}f(x, y)\ ds \]
 		FT of $P_\theta (t)$
@@ -269,8 +262,7 @@
 		\[\mathcal{F}\{f(x,y)\}(\omega cos\theta,\omega sin\theta)=\mathcal{F}\{P_\theta(t)\}(\omega)\]
 	\end{theorem}
 	  
-	\footnotesize 傅里叶中心切片定理将\textbf{投影}与\textbf{图像}两者在频域建立了联系。实际情况均为离散化数据，可使用FFT等进行计算；使用滤波反投影法 (FBP) 进行重建。
-	  
+	\footnotesize 傅里叶中心切片定理将\textbf{投影}与\textbf{图像}两者在频域建立了联系。实际情况均为离散化数据，可使用FFT等进行计算；使用滤波反投影法 (FBP) 进行重建。  
 \end{frame}
   
   
@@ -278,21 +270,16 @@
 \begin{frame}{连续模型：FBP} 
 	算法步骤如下：  
 	\begin{enumerate}
-		\item 指定$\theta$，对\(P_\theta (t)\)应用FFT，得到\(S_\theta (w)\)
-		        
-		\item 对\(S_\theta (w)\)做滤波，本文使用Ramp函数
-		        
-		\item 应用iFFT于滤波后的结果，得滤波后的投影矩阵
-		        
-		\item 对投影矩阵插值，进行反投影，本文使用nearest方式
-		        
+		\item 指定$\theta$，对\(P_\theta (t)\)应用FFT，得到\(S_\theta (w)\)        
+		\item 对\(S_\theta (w)\)做滤波，本文使用Ramp函数       
+		\item 应用iFFT于滤波后的结果，得滤波后的投影矩阵   
+		\item 对投影矩阵插值，进行反投影，本文使用nearest方式    
 		\item 遍历所有的$\theta$    
 	\end{enumerate}
 \end{frame}
-% Ramp滤波是怎么回事？
+% Ramp滤波是怎么回事？Ramp就是频谱上三角形滤波器，滤去一些高频信号
 % 插值又是个啥，我咋不记得
-  
-  
+
 \begin{frame}{离散模型}  
 	设图片共有\(J = n\times n\)个像素，记$\textbf{x}=[x_{1},x_{2} ,\ldots ,x_{J}]^T$为J维图像矢量，\(x_j\)表示图像上第\(j\)个像素点的吸收强度；$\textbf{p}=[p_{1},p_{2} \ldots p_{I}]^T$为I维投影矢量，$p_i$表示第\(i\)条射线所经过的所有像素的投影值，$R=(r_ij)_{I\times J}$为投影矩阵，\(r_ij\)为0-1变量表示宽为\(\delta\)的粗射线\(i\)是否穿过像素\(j\)，则	  
 	\begin{equation}
@@ -303,49 +290,86 @@
   
   
 \begin{frame}{离散模型：ART}
-	  
 	ART（代数迭代法）的思路是每次校正一条射线路径上的像素值，使得该条真伪射线和间误差减小。迭代公式为：ART（代数迭代法）的思路是每次校正一条射线路径上的像素值，使得该条真伪射线和间误差减小。迭代公式为：
-	  
 	\begin{equation}
-		x^{(k+1)}=x^{(k)}+\lambda^{(k)}\frac{q_{i_{k}}-r_{i_{k}}x^{(k)}}{||r_{i_{k}}||^{2}}r_{i_{k}}
+		x^{(k+1)}=x^{(k)}+\lambda^{(k)}\frac{p_{i_{k}}-r_{i_{k}}x^{(k)}}{||r_{i_{k}}||^{2}}r_{i_{k}}
 	\end{equation}
-	  
 	式中，k是迭代次数，$k=0,1 \ldots$，$i_{k}=k(modI)+1$；$\lambda^{(k)}$称为松弛参数，本文取$\lambda^{(k)}=0.25$
-	  
 	\begin{alertblock}{Note}
-		  
 		迭代过程中每步还可应用像素值非负这一限制
-		  
 	\end{alertblock}
-	  
 \end{frame}
-  
-  
   
 \begin{frame}{降噪算法}
 	本文使用NLM（非局部均值）降噪方式对图像进行处理。 NLM算法是图像降噪领域非常有效的算法之一，效率较高，实现简单。其思路是对像素的某邻域窗口内的像素灰度值做加权平均，且像素越相似，权重越大。
-	  
 	\begin{equation}
 		NLM(x_{i})=\sum_{j\in N_{i}} w(i,j)x_{j}
 	\end{equation}
-	其中,\(w(i,j)=\frac{e^{-||x_{V_{i}}-x_{V_{j}}||^2/h^2}}{\sum_{j\in N_{i}}e^{-||x_{V_{i}}-x_{V_{j}}||^2/h^2}}\)，$N_{i}$表示像素i的邻域，本文取5*5像素窗口，$x_{V_{i}}$是像素i邻域像素的值构成的矩阵，这里矩阵模的意义是各元素平方和的平方根$h$控制滤波强度，本文取为0.5
+	其中,\(w(i,j)=\frac{e^{-||x_{V_{i}}-x_{V_{j}}||^2/h^2}}{\sum_{j\in N_{i}}e^{-||x_{V_{i}}-x_{V_{j}}||^2/h^2}}\)，$N_{i}$表示像素i的邻域，本文取5*5像素窗口，$x_{V_{i}}$是像素i邻域像素的值构成的矩阵，这里矩阵模的意义是各元素平方和的平方根;$h$控制滤波强度，本文取为0.5
 \end{frame}
   
-  
-  
+
 \begin{frame}{求解结果}
-	  
-	\small 重建之前，先将数据进行预处理，变换到旋转中心与原点重合且关于过原点的垂线对称的参考探测器上\\
-	  
+	重建之前，先将数据进行预处理，变换到旋转中心与原点重合且关于过原点的垂线对称的参考探测器上\\
 	\begin{figure}[H]
+		\begin{minipage}[H]{0.4\textwidth}
 		\centering
-		\includegraphics[width=0.5\textwidth]{./pic/DOT.jpg}\\
+		\includegraphics[width=\textwidth]{./pic/P2_FBP.jpg}
+		\end{minipage}
+		\begin{minipage}[H]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./pic/P2-ART-5-NLM.jpg}
+		\end{minipage}
 	\end{figure}
-	  
-	算法输出结果再做适当的缩放和比例处理即为最终结果。
-	  
+	算法输出结果再做适当的缩放和比例处理即为最终结果。 
 \end{frame}
-  
+
+\begin{frame}{求解结果}
+	以下为指定点处的重建值
+	\begin{columns}[t] 
+		\begin{column}[c]{5cm} 
+			\maxpic{DOT.jpg}{十个取样点位置图}
+		\end{column} 
+		\begin{column}[c]{5cm} 
+			\begin{table}[H]
+				\centering
+				\tiny
+				\begin{tabular}{ccccc}
+					\toprule
+					\text{No.}   & 1 & 2 & 3 & 4 \\
+					\midrule
+					\text{Value} & 0.0070 & 0.6943 & 0.0106 & 0.8269 \\
+					\midrule
+					\text{No.}   & 5 & 6 & 7 & 8  \\
+					\midrule
+					\text{Value} & 0.7285 & 0.9269 & 0.9111 & 0.0000  \\
+					\midrule
+					\text{No.}  & 9 & 10 & & \\
+					\midrule
+					\text{Value}  & 0.0062 & 0.0000 &  &  \\
+					\bottomrule
+				\end{tabular}
+				\caption{取样点处重建值}
+			\end{table}
+		\end{column} 
+	\end{columns}
+
+	% \begin{figure}[H]
+	% 	\centering
+	% 	\includegraphics[width=0.3\textwidth]{./pic/DOT.jpg}
+	% \end{figure}
+	% \begin{table}[H]
+	% 	\centering
+	% 	\tiny
+	% 	\begin{tabular}{ccccccccccc}
+	% 		\toprule
+	% 		\text{No.}   & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+	% 		\midrule
+	% 		\text{Value} & 0.0070 & 0.6943 & 0.0106 & 0.8269 & 0.7285 & 0.9269 & 0.9111 & 0.0000 & 0.0062 & 0.0000 \\
+	% 		\bottomrule
+	% 	\end{tabular}
+	% \end{table}
+\end{frame}		
   
   
 \section{问题三的求解}
@@ -361,22 +385,16 @@
 		\includegraphics[width=\textwidth]{./pic/fujian5.png}
 		\end{minipage}
 	\end{figure}
-	与第二问区别：增加噪声。数据更复杂，考验算法鲁棒性。
+	与第二问区别：增加噪声，数据更复杂，考验算法鲁棒性。
 \end{frame}
   
 \begin{frame}{去噪预处理}
 	\small 观察数据，发现含有较多噪声：
-	  
 	\begin{itemize}
-		  
-		\item \small 一方面，作差分图（下图）可见主要数据集中在探测器中间部位，边缘部分值远小于主要数据值
-		        
-		\item \small 另一方面，绘制对数坐标图可见边缘数值无规律波动
-		        
+		\item \small 一方面，作差分图（下图）可见主要数据集中在探测器中间部位，边缘部分值远小于主要数据值 
+		\item \small 另一方面，绘制对数坐标图可见边缘数值无规律波动  
 	\end{itemize}
-	  
-	同时，根据对数坐标图，考虑噪声水平约为0.3，筛选小于0.3的值进行进一步检验。画出分布直方图，猜想其近似服从均为分布；利用SPSS做Kolmogorov-Smirnov均匀分布检验。
-	
+	同时，根据对数坐标图，考虑噪声水平约为0.3，筛选小于0.3的值进行进一步检验。画出数据差分图图，猜想其近似服从均为分布；利用SPSS做Kolmogorov-Smirnov均匀分布检验。
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.5\textwidth]{./pic/fujian5_1.png}\\
@@ -386,35 +404,65 @@
   
   
 \begin{frame}{去噪预处理}
-	  
-
 	\small 探测器两边的相邻两个传感器的数据差集中在0 附近，因此我们推测这些数据是由测量时的误差引起的波动。
-	  
 	\small 检验结果接受原假设（均匀分布），均值为0.1549，显著性水平0.157\\
-	  
-	\small 因此，对原数据做去噪处理，本文将非主信号区域的噪声删去并在主要信号值上减去噪声均值。之后再按照问题二所述方法进行预处理，并分别使用ART算法与FBP算法进行重建。
-	  
-\end{frame}
-  
-  
-  
-\begin{frame}{求解结果}
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.5\textwidth]{./pic/res3.png}\\
+		\includegraphics[width=0.4\textwidth]{./pic/K-S.jpg}\\
 	\end{figure}
-	\small 依然，使用FBP求解结果较小。ART更加精确。  
+	\small 因此，对原数据做去噪处理，本文将非主信号区域的噪声删去并在主要信号值上减去噪声均值。之后再按照问题二所述方法进行预处理，并分别使用ART算法与FBP算法进行重建。
 \end{frame}
   
-  
-  
-\begin{frame}{评价及后续改进}
-	  
+\begin{frame}{求解结果}
+	依然，使用FBP求解结果较小。ART更加精确。 
+	\begin{columns}[t] 
+		\begin{column}[c]{5cm} 
+			\maxpic{res3.png}{十个取样点位置图}
+		\end{column} 
+		\begin{column}[c]{5cm} 
+			\begin{table}[H]
+				\centering
+				\tiny
+				\begin{tabular}{ccccc}
+					\toprule
+					\text{No.}   & 1 & 2 & 3 & 4 \\
+					\midrule
+					\text{Value} & 0.0212 & 3.5766 & 8.5109 & 0.0136 \\
+					\midrule
+					\text{No.}   & 5 & 6 & 7 & 8  \\
+					\midrule
+					\text{Value} & 0.0349 & 3.8526 & 8.1648 & 0.0413  \\
+					\midrule
+					\text{No.}  & 9 & 10 & & \\
+					\midrule
+					\text{Value}  & 7.9565 & 0.0051 &  &  \\
+					\bottomrule
+				\end{tabular}
+				\caption{取样点处重建值}
+			\end{table}
+		\end{column} 
+	\end{columns}
+	% \begin{figure}[H]
+	% 	\centering
+	% 	\includegraphics[width=0.3\textwidth]{./pic/res3.png}\\
+	% \end{figure}
+	% \small 依然，使用FBP求解结果较小。ART更加精确。 
+	% \begin{table}[H]
+	% 	\centering
+	% 	\begin{tabular}{ccccccccccc}
+	% 		\toprule
+	% 		\text{No.}   & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+	% 		\midrule
+	% 		\text{Value} & 0.0212 & 3.5766 & 8.5109 & 0.0136 & 0.0349 & 3.8526 & 8.1648 & 0.0413 & 7.9565 & 0.0051 \\
+	% 		\bottomrule
+	% 	\end{tabular}
+	% \end{table} 
+\end{frame}
+
+\begin{frame}{对比与评价} 
 	对比两种算法，ART-NLM算法的重建速度较慢，成像质量略差与FBP。我们认为这是由于投影矩阵$R$元素为0-1变量造成的；每次做迭代修正时，射线边缘的像素也同时受到等值的修正，造成了一定的偏差\\
-	  
-	之后，我们重写了算法，定义\(r_ij\)为射线$i$与像素$j$交得的线段长度，ART-NLM重建结果与标准值十分接近，表现出极佳的精度。
-	  
 \end{frame}
+
 \section{问题四的求解}
 \begin{frame}{精度分析}
 	在这个问题中，我们采用模拟仿真的方法进行精度分析。在问题一模型的基础上，我们通过更改位置参数信息，进行模拟，得到这种情况下的\(512\times180\)个数据，再使用我们的模型，在这组数据的基础上进行标定，计算得出标定所需参数，与设定的理论值进行对比，即可得到模型的精度信息。
@@ -442,14 +490,16 @@
 	使用计算机进行仿真，人为地在投影坐标中增加不同等级的噪声数据，再以此进行模板标定。
 	与精度分析相同，设置参数\(d_0 = 1,\mu = 1.5,x_0 = 10,y_0 = 10\)，观测角度依次为\(\phi_i = i^\circ,i = 1,\ldots,180\)，使用(1)中模型，模拟生成180组探测器数据。根据这种方法模拟得到的探测器接受信息中的数据范围在(0,120)之间，我们给原数据增加在(-15,15)范围内均匀分布的随机噪声。从数据图中可以看出，数据信息较原数据更模糊，且噪声较多。
 	
-	这里有一个问题就是实际的探测器数值是不会有负值的，我们在做的时候没有考虑到这一点，导致生成的探测器数据会有负值。
+	\begin{alertblock}{Note}
+		\small 这里有一个问题就是实际的探测器数值是不会有负值的，我们在做的时候没有考虑到这一点，导致生成的探测器数据会有负值。
+	\end{alertblock}
 \end{frame}
 
 \begin{frame}{稳定性分析}
 	\doublepic{zaoyin2.png}{投影数据}{zaoyin30_wucha.png}{角度计算误差}
 	角度计算的均方根误差为0.0053rad，结合图像与表格数据，我们可以看出，我们的标定算法在数据有小范围的噪音的时候，标定产生的误差仍然较小，算法具有很好的稳定性。
 \end{frame}
-
+ 
 \begin{frame}{稳定性分析}
 	\doublepic{zaoyin3.png}{(-50,50)噪声的投影数据}{zaoyin50_wucha.png}{角度计算误差}
 \end{frame}
@@ -485,7 +535,7 @@
 	\doublepic{sketch1.png}{新标定模板的示意图}{sketch2.png}{几何关系示意图}
 	有对称信息，但不中心对称。几何形状简单，便于寻找特殊点。
 \end{frame}
-
+ 
 \begin{frame}{新标定模板的设计}
 	\begin{figure}[H]
 		\centering
@@ -506,7 +556,6 @@
 	\[ \phi = arcsin\left(  \frac{(R1_{c1} - R2_{c1})\Delta d}{C_1 C_2}   \right)\]
 	\small 再考察第90组CT观测数据，此时探测器相对于初始位置逆时针旋转了大约90°。\(\angle ROD = arctan(HD/H'D') \)，\(OR\)与\(x\)轴的夹角为 \( \theta _R = \phi + \pi/2 - \angle ROD \)，则\(R\)坐标为:
 	\[x_0 = |OR| \times cos(\theta_R), y_0 = |OR| \times sin(\theta_R) \]
-	
 \end{frame}
 
 \begin{frame}{新标定模板的使用评价}
@@ -515,8 +564,23 @@
 	\small 与第一问中的算法相比，本模板只进行\textbf{一次}迭代优化即可得到精度较高的结果，计算量相对较小。
 \end{frame}
 
+\section{参考文献}
+\begin{frame}{参考文献}
+	\begin{thebibliography}{0}
+		    
+		\bibitem{toumo}
+		Kak A C. BOOKS AND PUBLICATIONS:"Principles of Computerized Tomographic Imaging"[J]. Medical Physics, 2002, 29(1):107.
+		    
+		\bibitem{nlm}
+		J. Huang et al, "Sparse angular CT reconstruction using non-local means based iterative-correction POCS," Computers in Biology and Medicine, vol. 41, (4), pp. 195-205, 2011.
+		    
+		\bibitem{ct1}庄天戈. CT原理与算法[M]. 上海交通大学出版社, 1992.
+		\bibitem{radon}林世明, W.-M.Boerner. 离散Radon变换[J]. 西北工业大学学报, 1988(2):49-56.
+	\end{thebibliography}
+\end{frame} % 
 
-
+\bibliographystyle{IEEEtran} % comment this line if nothing is cited
+\bibliography{bibliography_file} % comment this line if nothing is cited
 
 \section{心得与体会}
 \begin{frame}{赛前}
@@ -528,8 +592,8 @@
 		\end{enumerate}
 	  \item 八月九月，准备国赛，扩充知识。
 		\begin{enumerate}
-		  \item[-] 最优化求解算法——SA, GA, NN, etc.
-		  \item[-] 数值计算——Runge-Kutta, Simpson, Gauss, etc
+		  \item[-] 优化求解算法——SA, GA, NN, etc.
+		  \item[-] 数值计算方法——曲线拟合,数值积分,微分方程求解 etc
 		  \item[-] 模型建立——\emph{Optimization Model with LINGO}, 往届国赛题
 		  \item[-] 一定要有书面笔记，给自己和队友交代
 		\end{enumerate}
@@ -539,7 +603,7 @@
 
   \begin{frame}{我们的比赛时间轴}
 	\begin{enumerate}
-	  \item \small 9月14日20：00发题，24：00前把整个题目框架搭好。
+	  \item \small 9月14日20：00发题，24：00前确定题目，把整个题目框架搭好。
 	  \item \small 9月15日中午之前，第一问模型建立，开始求解。
 	  \item \small 9月15日20：00前把第一问结束。开始着手第二三问，建立二三问模型。
 	  \item \small 9月16日中午之前，第二问第三问模型基本建成，开始求解。同时着手稳定性分析。抽空思考自己设计的模板。
@@ -553,21 +617,34 @@
 	  \textbf{计划赶不上变化，但一定要预留充足时间。}
 	\end{center}
   \end{frame}
-
   \begin{frame}{MATLAB创新奖}
-	\begin{enumerate}
+  	\begin{enumerate}
 	  \item \small 手写算法——标定，FBP，ART。
-	  \item \small 只使用数据，不考虑几何特殊点——基于丰富的求解经验。
+	  \item \small 最开始利用几何信息进行初步分析，比较之后决定不使用几何信息求解。
+	  \item \small 充分利用所有数据，设计算法进行标定。
 	  \item \small 准确发现第三问与第二问的区别——加均匀分布噪声。
 	  \item \small 论文框架完整——第一到四问模型+稳定性分析+模型评价。
+	  \item \small 找到MATLAB中有自带解决该问题的函数iradon.m，但是函数的源码被封装起来，因此决定自行设计代码。
 	\end{enumerate}
-	\small MATLAB中有自带解决该问题的函数iradon.m，我们是五个优秀论文组中唯一没用该函数的队伍。
+	
 	\end{frame}
 
 	\begin{frame}{MATLAB程序的有趣之处}
-		%% TODO: 研究一下其他组的第一问
-		这里应该有其他组第一问的做法，和我们对比一波
-
+	\begin{table}[H]
+		\centering
+		\caption{优秀论文第一问解法对比}
+		\begin{tabular}{ccccc}
+			\toprule
+			\text{No.} & A156 & A298 & A053 & A090\\
+			\midrule
+			$\Delta d$ & \text{几何特征+搜索} & \text{几何特征} & ? & ? \\ 
+			$d_0$ & \text{未解} & \text{未解} & ? & ? \\
+			$(x_0,y_0)$ & \text{几何特征+搜索} & \text{几何特征} & ? & ? \\
+			$\mu$ & \text{小圆平均} & \text{特征位置} & ? & ? \\
+			$\theta$ & \text{遍历搜索} & \text{非线性优化} & ? & ?\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
 	\end{frame}
 
 	\begin{frame}{后续的改进}
@@ -589,33 +666,11 @@
 		\begin{itemize}
 			\item \textbf{FBP（滤波反投影）的改进}
 		\end{itemize}
-
-
 		\small FBP中反投影矩阵的维度一定为探测单元数，即512。实际图像中存在将结果resize为256*256的过程，在其中需要乘以一个系数。\\
-		
-
 		因为在连续模型中使用FFT会导致舍入误差的出现，加上FBP中有一个低通滤波，会使数据有一定失真，导致FBP的结果比实际结果要小。
 	\end{frame}
 
-\section{参考文献}
-\begin{frame}{参考文献}
-	\begin{thebibliography}{0}
-		    
-		\bibitem{toumo}
-		Kak A C. BOOKS AND PUBLICATIONS:"Principles of Computerized Tomographic Imaging"[J]. Medical Physics, 2002, 29(1):107.
-		    
-		\bibitem{nlm}
-		J. Huang et al, "Sparse angular CT reconstruction using non-local means based iterative-correction POCS," Computers in Biology and Medicine, vol. 41, (4), pp. 195-205, 2011.
-		    
-		\bibitem{ct1}庄天戈. CT原理与算法[M]. 上海交通大学出版社, 1992.
-		\bibitem{radon}林世明, W.-M.Boerner. 离散Radon变换[J]. 西北工业大学学报, 1988(2):49-56.
-	\end{thebibliography}
-\end{frame} % 
 
-\bibliographystyle{IEEEtran} % comment this line if nothing is cited
-\bibliography{bibliography_file} % comment this line if nothing is cited
-
-%\end{CJK*}
 \end{document}
 
 % \label{Sec:model}
