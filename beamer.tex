@@ -272,9 +272,8 @@
 	\begin{enumerate}
 		\item 指定$\theta$，对\(P_\theta (t)\)应用FFT，得到\(S_\theta (w)\)        
 		\item 对\(S_\theta (w)\)做滤波，本文使用Ramp函数       
-		\item 应用iFFT于滤波后的结果，得滤波后的投影矩阵   
-		\item 对投影矩阵插值，进行反投影，本文使用nearest方式    
-		\item 遍历所有的$\theta$    
+		\item 应用iFFT于滤波后的结果，得滤波后的投影矩阵     
+		\item 遍历所有的$\theta$，获得重建图像 
 	\end{enumerate}
 \end{frame}
 % Ramp滤波是怎么回事？Ramp就是频谱上三角形滤波器，滤去一些高频信号
@@ -282,9 +281,17 @@
 
 \begin{frame}{离散模型}  
 	设图片共有\(J = n\times n\)个像素，记$\textbf{x}=[x_{1},x_{2} ,\ldots ,x_{J}]^T$为J维图像矢量，\(x_j\)表示图像上第\(j\)个像素点的吸收强度；$\textbf{p}=[p_{1},p_{2} \ldots p_{I}]^T$为I维投影矢量，$p_i$表示第\(i\)条射线所经过的所有像素的投影值，$R=(r_ij)_{I\times J}$为投影矩阵，\(r_ij\)为0-1变量表示宽为\(\delta\)的粗射线\(i\)是否穿过像素\(j\)，则	  
+	
+
 	\begin{equation}
 		R\textbf{x}=\textbf{p}
 	\end{equation}
+
+	\[r_{ij}=
+	\begin{cases}
+	1 ,& \text{i号射线通过j号像素中心}\\
+	0 ,& \text{其他}
+	\end{cases}\]
 \end{frame}
   
   
